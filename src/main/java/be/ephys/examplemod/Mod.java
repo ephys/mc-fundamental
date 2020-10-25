@@ -1,5 +1,6 @@
 package be.ephys.examplemod;
 
+import be.ephys.examplemod.bound_lodestone.BoundLodestoneModule;
 import be.ephys.examplemod.named_lodestone.NamedLodeStoneEventHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -14,6 +15,7 @@ public class Mod {
 
   public Mod() {
     ModRegistry.init();
+    BoundLodestoneModule.init();
 
     MinecraftForge.EVENT_BUS.addListener(NamedLodeStoneEventHandler::onRightClickSignWithCompass);
   }
