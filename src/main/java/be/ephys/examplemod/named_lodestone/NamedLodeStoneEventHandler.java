@@ -39,8 +39,7 @@ public class NamedLodeStoneEventHandler {
     BlockPos lodestonePos = signPos.offset(signDirection.getOpposite());
     BlockState attachedLodestone = world.getBlockState(lodestonePos);
 
-    //                             .LODESTONE
-    if (!attachedLodestone.isIn(Blocks.field_235405_no_)) {
+    if (!attachedLodestone.isIn(Blocks.LODESTONE)) {
       return;
     }
 

@@ -3,7 +3,6 @@ package be.ephys.examplemod.mixins;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallSignBlock;
 import net.minecraft.item.CompassItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -106,10 +105,9 @@ public class CompassItemMixin {
       }
 
       if (allText == null) {
-        allText = lineText.func_230532_e_(); // .copy
+        allText = lineText.deepCopy(); // .copy
       } else {
-        //  .addSibling             .copy
-        allText.func_230529_a_(lineText.func_230532_e_());
+        allText.append(lineText.deepCopy());
       }
     }
 

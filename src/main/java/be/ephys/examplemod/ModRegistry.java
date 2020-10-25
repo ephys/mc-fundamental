@@ -12,19 +12,17 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-@Mod.EventBusSubscriber(modid = ExampleMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
 
-  public static final ResourceLocation CRAFTING_TABLE_TAG = new ResourceLocation(ExampleMod.MODID, "crafting_table");
+  public static final ResourceLocation CRAFTING_TABLE_TAG = new ResourceLocation(Mod.MODID, "crafting_table");
   public static final ITag.INamedTag<Block> CRAFTING_TABLE_TAG_WRAPPER = BlockTags.makeWrapperTag(CRAFTING_TABLE_TAG.toString());
 
-  public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ExampleMod.MODID);
-  public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ExampleMod.MODID);
+  public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Mod.MODID);
+  public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Mod.MODID);
 
   public static void init() {
     BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());

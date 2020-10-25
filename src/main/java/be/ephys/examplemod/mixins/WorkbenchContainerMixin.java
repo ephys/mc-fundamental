@@ -18,7 +18,7 @@ public class WorkbenchContainerMixin {
 
   @Shadow
   @Final
-  private IWorldPosCallable field_217070_e;
+  private IWorldPosCallable worldPosCallable;
 
   @Inject(method = "canInteractWith", at = @At("RETURN"), cancellable = true)
   public void canInteractWith$useTagSystem(PlayerEntity playerIn, CallbackInfoReturnable<Boolean> cir) {
@@ -28,13 +28,12 @@ public class WorkbenchContainerMixin {
       return;
     }
 
-    cir.setReturnValue(isWithinUsableDistance(this.field_217070_e, playerIn, ModRegistry.CRAFTING_TABLE_TAG_WRAPPER));
+    cir.setReturnValue(isWithinUsableDistance(this.worldPosCallable, playerIn, ModRegistry.CRAFTING_TABLE_TAG_WRAPPER));
   }
 
   private static boolean isWithinUsableDistance(IWorldPosCallable worldPos, PlayerEntity playerIn, ITag<Block> targetTag) {
     return worldPos.applyOrElse((p_216960_2_, p_216960_3_) -> {
-      // func_235714_a_ = isIn
-      return !p_216960_2_.getBlockState(p_216960_3_).func_235714_a_(targetTag) ? false : playerIn.getDistanceSq((double)p_216960_3_.getX() + 0.5D, (double)p_216960_3_.getY() + 0.5D, (double)p_216960_3_.getZ() + 0.5D) <= 64.0D;
+      return !p_216960_2_.getBlockState(p_216960_3_).isIn(targetTag) ? false : playerIn.getDistanceSq((double)p_216960_3_.getX() + 0.5D, (double)p_216960_3_.getY() + 0.5D, (double)p_216960_3_.getZ() + 0.5D) <= 64.0D;
     }, true);
   }
 }
