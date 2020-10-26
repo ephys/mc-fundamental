@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xx",
+    "xx"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:spruce_planks"
+    }
+  },
+  "result": {
+    "item": "examplemod:spruce_crafting_table",
+    "count": 1
+  }
+}

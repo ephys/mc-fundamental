@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xx",
+    "xx"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:acacia_planks"
+    }
+  },
+  "result": {
+    "item": "examplemod:acacia_crafting_table",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "examplemod:flag",
+      "flag": "examplemod_crafting_table"
+    }
+  ]
+}

@@ -3,6 +3,11 @@
   "values": [
     "minecraft:crafting_table",
     "examplemod:warped_crafting_table",
-    "examplemod:crimson_crafting_table"
+    "examplemod:crimson_crafting_table",
+    "examplemod:acacia_crafting_table",
+    "examplemod:birch_crafting_table",
+    "examplemod:dark_oak_crafting_table",
+    "examplemod:jungle_crafting_table",
+    "examplemod:spruce_crafting_table"
   ]
 }

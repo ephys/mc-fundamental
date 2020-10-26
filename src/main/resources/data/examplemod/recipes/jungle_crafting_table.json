@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xx",
+    "xx"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:jungle_planks"
+    }
+  },
+  "result": {
+    "item": "examplemod:jungle_crafting_table",
+    "count": 1
+  }
+}
