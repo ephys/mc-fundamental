@@ -68,8 +68,6 @@ public class BoundLodestoneBlock extends Block {
       return super.onBlockActivated(state, world, pos, player, handIn, hit);
     }
 
-    System.out.println("TE BOUND " + te.isBound() + " to " + te.getTargetLodestonePos());
-
     if (!te.isBound()) {
       if (!this.attemptBindLodestone(te, heldItem, player, world)) {
         return super.onBlockActivated(state, world, pos, player, handIn, hit);
