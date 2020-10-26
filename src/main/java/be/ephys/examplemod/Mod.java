@@ -4,6 +4,7 @@ import be.ephys.examplemod.bound_lodestone.BoundLodestoneModule;
 import be.ephys.examplemod.named_lodestone.NamedLodeStoneEventHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,6 +19,8 @@ public class Mod {
     BoundLodestoneModule.init();
 
     MinecraftForge.EVENT_BUS.addListener(NamedLodeStoneEventHandler::onRightClickSignWithCompass);
+
+    ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
   }
 
   public static ResourceLocation id(String resourceId) {
