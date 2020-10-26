@@ -1,6 +1,16 @@
 package be.ephys.examplemod.bound_lodestone;
 
 import be.ephys.examplemod.Mod;
+import be.ephys.examplemod.ModRegistry;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.CraftingTableBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
@@ -12,6 +22,8 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -22,9 +34,30 @@ public class BoundLodestoneModule {
   public static final Feature<NoFeatureConfig> BoundLodestoneFeature = new BoundLodestoneFeature(NoFeatureConfig.field_236558_a_); // .CODEC
   public static final ConfiguredFeature<?, ?> BoundLodestoneConfiguredFeature = BoundLodestoneFeature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
 
+  // TODO require high level pickaxe to break
+  public static final RegistryObject<Block> BOUND_LODESTONE = ModRegistry.BLOCKS.register("bound_lodestone", () ->
+    new BoundLodestoneBlock(AbstractBlock.Properties.create(Material.ANVIL).setRequiresTool().hardnessAndResistance(3.5F).sound(SoundType.LODESTONE))
+  );
+
+  public static final RegistryObject<Item> BOUND_LODESTONE_ITEM = ModRegistry.ITEMS.register("bound_lodestone", () ->
+    new BlockItem(BOUND_LODESTONE.get(), new Item.Properties().group(ItemGroup.DECORATIONS))
+  );
+
+  public static TileEntityType<BoundLodestoneTileEntity> boundLodestoneTeType;
+
   public static void init() {
-    FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Feature.class, BoundLodestoneModule::registerFeatures);
+    IEventBus modEventBus =  FMLJavaModLoadingContext.get().getModEventBus();
+    modEventBus.addGenericListener(Feature.class, BoundLodestoneModule::registerFeatures);
+    modEventBus.addGenericListener(TileEntityType.class, BoundLodestoneModule::registerTileEntities);
     MinecraftForge.EVENT_BUS.addListener(BoundLodestoneModule::addStructuresToWorldgen);
+  }
+
+  public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt) {
+    TileEntityType<BoundLodestoneTileEntity> type = TileEntityType.Builder.create(BoundLodestoneTileEntity::new, BOUND_LODESTONE.get()).build(null);
+    type.setRegistryName(Mod.id("bound_lodestone"));
+    evt.getRegistry().register(type);
+
+    boundLodestoneTeType = type;
   }
 
   public static void registerFeatures(RegistryEvent.Register<Feature<?>> event) {

@@ -1,5 +1,8 @@
 {
   "block.minecraft.crafting_table": "Oak Crafting Table",
   "block.examplemod.warped_crafting_table": "Warped Crafting Table",
-  "block.examplemod.crimson_crafting_table": "Crimson Crafting Table"
+  "block.examplemod.crimson_crafting_table": "Crimson Crafting Table",
+  "block.examplemod.bound_lodestone": "Bound Lodestone",
+  "messages.examplemod.not_a_lodestone_compass": "This compass is not bound",
+  "messages.examplemod.your_lodestone_is_in_another_castle": "Your compass is scrambled and fails to bind the lodestone"
 }
