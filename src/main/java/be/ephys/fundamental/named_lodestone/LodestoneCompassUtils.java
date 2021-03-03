@@ -78,7 +78,7 @@ public class LodestoneCompassUtils {
 
     IFormattableTextComponent allText = null;
     for (int line = 0; line < 4; line++) {
-      ITextComponent lineText = signTe.getText(line);
+      ITextComponent lineText = signTe.signText[line];
       if (lineText.getString().equals("")) {
         continue;
       }

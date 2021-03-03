@@ -3,6 +3,7 @@ package be.ephys.fundamental.mixins;
 import be.ephys.fundamental.named_lodestone.LodestoneCompassUtils;
 import net.minecraft.item.CompassItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -18,7 +19,14 @@ public class CompassItemMixin {
 
   @Inject(method = "func_234669_a_", at = @At("RETURN"))
   private void func_234669_a_$setLodestoneName(RegistryKey<World> dimension, BlockPos pos, CompoundNBT nbt, CallbackInfo ci) {
-    World world = ServerLifecycleHooks.getCurrentServer().getWorld(dimension);
+    MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+
+    // client-side
+    if (server == null) {
+      return;
+    }
+
+    World world = server.getWorld(dimension);
 
     if (world == null) {
       return;
