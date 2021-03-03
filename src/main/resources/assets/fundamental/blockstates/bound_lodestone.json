@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "bound=false": { "model": "fundamental:block/bound_lodestone_unbound" },
+    "bound=true": { "model": "fundamental:block/bound_lodestone" }
+  }
+}

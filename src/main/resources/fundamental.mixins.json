@@ -1,0 +1,14 @@
+{
+  "minVersion": "0.8",
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "fundamental.mixins.refmap.json",
+  "package": "be.ephys.fundamental.mixins",
+  "mixins": [
+    "WorkbenchContainerMixin",
+    "CompassItemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

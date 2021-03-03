@@ -1,0 +1,13 @@
+{
+  "block.minecraft.crafting_table": "Oak Crafting Table",
+  "block.fundamental.acacia_crafting_table": "Acacia Crafting Table",
+  "block.fundamental.birch_crafting_table": "Birch Crafting Table",
+  "block.fundamental.crimson_crafting_table": "Crimson Crafting Table",
+  "block.fundamental.dark_oak_crafting_table": "Dark Oak Crafting Table",
+  "block.fundamental.jungle_crafting_table": "Jungle Crafting Table",
+  "block.fundamental.spruce_crafting_table": "Spruce Crafting Table",
+  "block.fundamental.warped_crafting_table": "Warped Crafting Table",
+  "block.fundamental.bound_lodestone": "Bound Lodestone",
+  "messages.fundamental.not_a_lodestone_compass": "This compass is not bound",
+  "messages.fundamental.your_lodestone_is_in_another_castle": "Your compass is scrambled and fails to bind the lodestone"
+}
