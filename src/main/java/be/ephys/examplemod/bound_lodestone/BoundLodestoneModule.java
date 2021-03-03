@@ -4,12 +4,10 @@ import be.ephys.examplemod.Mod;
 import be.ephys.examplemod.ModRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.CraftingTableBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -19,8 +17,10 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -34,7 +34,6 @@ public class BoundLodestoneModule {
   public static final Feature<NoFeatureConfig> BoundLodestoneFeature = new BoundLodestoneFeature(NoFeatureConfig.field_236558_a_); // .CODEC
   public static final ConfiguredFeature<?, ?> BoundLodestoneConfiguredFeature = BoundLodestoneFeature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
 
-  // TODO require high level pickaxe to break
   public static final RegistryObject<Block> BOUND_LODESTONE = ModRegistry.BLOCKS.register("bound_lodestone", () ->
     new BoundLodestoneBlock(AbstractBlock.Properties.create(Material.ANVIL).setRequiresTool().hardnessAndResistance(3.5F).sound(SoundType.LODESTONE))
   );
@@ -46,10 +45,34 @@ public class BoundLodestoneModule {
   public static TileEntityType<BoundLodestoneTileEntity> boundLodestoneTeType;
 
   public static void init() {
-    IEventBus modEventBus =  FMLJavaModLoadingContext.get().getModEventBus();
-    modEventBus.addGenericListener(Feature.class, BoundLodestoneModule::registerFeatures);
+    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     modEventBus.addGenericListener(TileEntityType.class, BoundLodestoneModule::registerTileEntities);
-    MinecraftForge.EVENT_BUS.addListener(BoundLodestoneModule::addStructuresToWorldgen);
+    MinecraftForge.EVENT_BUS.addListener(BoundLodestoneModule::onVillagerTrades);
+
+    // Upcoming
+    // modEventBus.addGenericListener(Feature.class, BoundLodestoneModule::registerFeatures);
+    // MinecraftForge.EVENT_BUS.addListener(BoundLodestoneModule::addStructuresToWorldgen);
+  }
+
+  public static void onVillagerTrades(VillagerTradesEvent event) {
+    if (event.getType() == VillagerProfession.CARTOGRAPHER) {
+      event.getTrades().get(3).add(
+        new BasicTrade(
+          /* price */
+          new ItemStack(Items.LODESTONE),
+          /* price */
+          new ItemStack(Items.EMERALD, 11),
+          /* buy */
+          new ItemStack(BOUND_LODESTONE_ITEM.get()),
+          /* max count */
+          8,
+          /* xp */
+          15,
+          /* price mult */
+          1f
+        )
+      );
+    }
   }
 
   public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt) {
