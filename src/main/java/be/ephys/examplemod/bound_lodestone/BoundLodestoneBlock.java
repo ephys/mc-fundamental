@@ -1,6 +1,7 @@
 package be.ephys.examplemod.bound_lodestone;
 
 import be.ephys.examplemod.Mod;
+import be.ephys.examplemod.named_lodestone.LodestoneCompassUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -38,6 +40,28 @@ public class BoundLodestoneBlock extends Block {
     }
 
     world.setBlockState(pos, state.with(BOUND, false));
+  }
+
+  public static BlockPos readCompassLodestonePos(CompoundNBT nbt) {
+    if (!nbt.contains("LodestonePos")) {
+      return null;
+    }
+
+    return NBTUtil.readBlockPos(nbt.getCompound("LodestonePos"));
+  }
+
+  public static <T extends TileEntity> T getTileEntity(Class<T> teClass, World world, BlockPos pos) {
+    TileEntity te = world.getTileEntity(pos);
+
+    if (te == null) {
+      return null;
+    }
+
+    if (!teClass.isInstance(te)) {
+      return null;
+    }
+
+    return teClass.cast(te);
   }
 
   @Override
@@ -63,20 +87,23 @@ public class BoundLodestoneBlock extends Block {
       return super.onBlockActivated(state, world, pos, player, handIn, hit);
     }
 
-    BoundLodestoneTileEntity te = getTileEntity(BoundLodestoneTileEntity.class, world, pos);
-    if (te == null) {
-      return super.onBlockActivated(state, world, pos, player, handIn, hit);
-    }
+    if (!world.isRemote) {
+      BoundLodestoneTileEntity te = getTileEntity(BoundLodestoneTileEntity.class, world, pos);
 
-    if (!te.isBound()) {
-      if (!this.attemptBindLodestone(te, heldItem, player, world)) {
+      if (te == null) {
         return super.onBlockActivated(state, world, pos, player, handIn, hit);
       }
 
-      world.setBlockState(pos, state.with(BOUND, true));
-    } else {
-      if (!this.attemptBindCompass(te, heldItem, player, world)) {
-        return super.onBlockActivated(state, world, pos, player, handIn, hit);
+      if (!te.isBound()) {
+        if (!this.attemptBindLodestone(te, heldItem, player, world)) {
+          return super.onBlockActivated(state, world, pos, player, handIn, hit);
+        }
+
+        world.setBlockState(pos, state.with(BOUND, true));
+      } else {
+        if (!this.attemptBindCompass(te, heldItem, player, world)) {
+          return super.onBlockActivated(state, world, pos, player, handIn, hit);
+        }
       }
     }
 
@@ -112,6 +139,7 @@ public class BoundLodestoneBlock extends Block {
 
   private boolean attemptBindCompass(BoundLodestoneTileEntity te, ItemStack heldItem, PlayerEntity player, World world) {
     BlockPos targetPos = te.getTargetLodestonePos();
+    BlockPos boundLoPos = te.getPos();
     RegistryKey<World> dim = world.getDimensionKey();
 
     // TODO: set display name if right clicking a sign
@@ -119,7 +147,7 @@ public class BoundLodestoneBlock extends Block {
 
     boolean flag = !player.abilities.isCreativeMode && heldItem.getCount() == 1;
     if (flag) {
-      this.addLodestoneNbt(dim, targetPos, heldItem.getOrCreateTag());
+      this.addLodestoneNbt(dim, world, boundLoPos, targetPos, heldItem.getOrCreateTag());
     } else {
       ItemStack boundCompass = new ItemStack(Items.COMPASS, 1);
       CompoundNBT compoundnbt = heldItem.hasTag() ? heldItem.getTag().copy() : new CompoundNBT();
@@ -128,7 +156,7 @@ public class BoundLodestoneBlock extends Block {
         heldItem.shrink(1);
       }
 
-      this.addLodestoneNbt(dim, targetPos, compoundnbt);
+      this.addLodestoneNbt(dim, world, boundLoPos, targetPos, compoundnbt);
       if (!player.inventory.addItemStackToInventory(boundCompass)) {
         player.dropItem(boundCompass, false);
       }
@@ -137,33 +165,20 @@ public class BoundLodestoneBlock extends Block {
     return true;
   }
 
-  private void addLodestoneNbt(RegistryKey<World> lodestoneDim, BlockPos lodestonePos, CompoundNBT nbt) {
-    nbt.put("LodestonePos", NBTUtil.writeBlockPos(lodestonePos));
+  private void addLodestoneNbt(RegistryKey<World> lodestoneDim, World world, BlockPos boundLoPos, BlockPos targetLodestonePos, CompoundNBT nbt) {
+    nbt.put("LodestonePos", NBTUtil.writeBlockPos(targetLodestonePos));
     World.CODEC.encodeStart(NBTDynamicOps.INSTANCE, lodestoneDim).resultOrPartial(Mod.LOGGER::error).ifPresent((dimId) -> {
       nbt.put("LodestoneDimension", dimId);
     });
     nbt.putBoolean("LodestoneTracked", true);
-  }
 
-  public static BlockPos readCompassLodestonePos(CompoundNBT nbt) {
-    if (!nbt.contains("LodestonePos")) {
-      return null;
+    // use name of the Bound Lodestone
+    ITextComponent name = LodestoneCompassUtils.getSignName(world, boundLoPos);
+    if (name == null) {
+      // use name of the Target Lodestone
+      name = LodestoneCompassUtils.getSignName(world, targetLodestonePos);
     }
 
-    return NBTUtil.readBlockPos(nbt.getCompound("LodestonePos"));
-  }
-
-  public static <T extends TileEntity> T getTileEntity(Class<T> teClass, World world, BlockPos pos) {
-    TileEntity te = world.getTileEntity(pos);
-
-    if (te == null) {
-      return null;
-    }
-
-    if (!teClass.isInstance(te)) {
-      return null;
-    }
-
-    return teClass.cast(te);
+    LodestoneCompassUtils.setLodestoneName(nbt, name);
   }
 }

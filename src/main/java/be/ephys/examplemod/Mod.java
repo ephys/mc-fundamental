@@ -8,7 +8,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @net.minecraftforge.fml.common.Mod(Mod.MODID)
 public class Mod {
   public static final String MODID = "examplemod";
@@ -18,6 +17,7 @@ public class Mod {
     ModRegistry.init();
     BoundLodestoneModule.init();
 
+    // make sign "pass-through" for lodestones, unless passthroughsigns is installed as they handle it already
     MinecraftForge.EVENT_BUS.addListener(NamedLodeStoneEventHandler::onRightClickSignWithCompass);
 
     ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
