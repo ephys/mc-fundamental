@@ -15,7 +15,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0.0'
+version = '1.0.1'
 group = 'be.ephys.fundamental' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'fundamental'
 
