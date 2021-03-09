@@ -19,6 +19,8 @@ using the text from the sign, instead of "Lodestone Compass".
 
 Enjoy our large selection of crafting tables, now available in all vanilla colors.
 
+*Tip*: custom crafting tables can be crafting into regular crafting tables. Mainly as a workaround for recipes that demand a vanilla table.
+
 **Bound Lodestone**
 
 ![A villager upgrading your lodestone](docs/screenshots/bound-lodestone.png)

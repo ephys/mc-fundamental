@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:crafting_table",
+    "fundamental:warped_crafting_table",
+    "fundamental:crimson_crafting_table",
+    "fundamental:acacia_crafting_table",
+    "fundamental:birch_crafting_table",
+    "fundamental:dark_oak_crafting_table",
+    "fundamental:jungle_crafting_table",
+    "fundamental:spruce_crafting_table"
+  ]
+}
