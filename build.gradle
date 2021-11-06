@@ -15,9 +15,9 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0.1'
-group = 'be.ephys.fundamental' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'fundamental'
+version = '1.2.0'
+group = "be.ephys.${mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = mod_id
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -40,7 +40,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            arg "-mixin.config=fundamental.mixins.json"
+            arg "-mixin.config=${mod_id}.mixins.json".toString()
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -57,7 +57,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            arg "-mixin.config=fundamental.mixins.json"
+            arg "-mixin.config=${mod_id}.mixins.json".toString()
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -81,7 +81,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'fundamental', '--all', '--output', file('src/generated/resources/')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/')
 
             mods {
                 fundamental {
@@ -93,64 +93,69 @@ minecraft {
 }
 
 mixin {
-    add sourceSets.main, 'fundamental.mixins.refmap.json'
+    add sourceSets.main, "${mod_id}.mixins.refmap.json"
+}
+
+repositories {
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/ephys/cookiecore")
+        credentials {
+            username = project.findProperty("gpr.user") as String ?: System.getenv("GH_MVN_USERNAME")
+            password = project.findProperty("gpr.key") as String ?: System.getenv("GH_MVN_PASSWORD")
+        }
+    }
 }
 
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    // https://github.com/Ephys/CookieCore/packages/102415
+    // You'll need to authenticate to Github Packages
+    // See https://docs.github.com/en/packages/guides/configuring-gradle-for-use-with-github-packages#authenticating-to-github-packages
+    compile fg.deobf('be.ephys.cookiecore:cookiecore:1.16.5-3.2.0-e3eab48b')
 }
 
 // Process resources on build: set the version in the mods.toml
 processResources {
-	// This will ensure that this task is redone when the versions change.
-	inputs.property 'version', project.version
+    // This will ensure that this task is redone when the versions change.
+    inputs.property 'version', project.version
 
-	// Replace stuff in mods.toml, nothing else
-	from(sourceSets.main.resources.srcDirs) {
-		include 'META-INF/mods.toml'
-		// Replace version
-		expand('jarVersion': project.version)
-	}
+    // Replace stuff in mods.toml, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+        // Replace version
+        expand(
+                'mod_version': project.version,
+                'mod_id': mod_id,
+                'mc_version': mc_version,
+                'mc_version_next_major': mc_version_next_major,
+                'forge_version': forge_version,
+                'forge_version_major': forge_version_major
+        )
+    }
 
-	// Copy everything else except the mods.toml
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'META-INF/mods.toml'
-	}
+    // Copy everything else except the mods.toml
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META-INF/mods.toml'
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
-            "Specification-Title": "fundamental",
-            "Specification-Vendor": "ephys",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"ephys",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "fundamental.mixins.json"
+                "Specification-Title": "${mod_id}",
+                "Specification-Vendor": "ephys",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"ephys",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "${mod_id}.mixins.json"
         ])
     }
 }

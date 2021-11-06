@@ -20,7 +20,6 @@ public class Mod {
 
     // make sign "pass-through" for lodestones, unless passthroughsigns is installed as they handle it already
     MinecraftForge.EVENT_BUS.register(new NamedLodeStoneFeature());
-
     MinecraftForge.EVENT_BUS.register(new SlimeOnPistonFeature());
 
     ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);

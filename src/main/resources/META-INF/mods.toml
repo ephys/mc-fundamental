@@ -1,10 +1,10 @@
 modLoader="javafml"
-loaderVersion="[34,)"
+loaderVersion="[${forge_version_major},)"
 license="MIT"
 issueTrackerURL="https://github.com/Ephys/mc-fundamental/issues"
 [[mods]]
-modId="fundamental"
-version="${jarVersion}"
+modId="${mod_id}"
+version="${mod_version}"
 displayName="Fundamental"
 #updateJSONURL="http://myurl.me/"
 displayURL="https://github.com/Ephys/mc-fundamental"
@@ -16,12 +16,18 @@ description='''
 [[dependencies.fundamental]]
     modId="forge"
     mandatory=true
-    versionRange="[34,)"
+    versionRange="[${forge_version},)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.fundamental]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3]"
+    versionRange="[${mc_version},${mc_version_next_major})"
     ordering="NONE"
+    side="BOTH"
+[[dependencies.fundamental]]
+    modId="cookiecore"
+    mandatory=true
+    versionRange="[1.16.5-3.2.0,)"
+    ordering="AFTER"
     side="BOTH"
