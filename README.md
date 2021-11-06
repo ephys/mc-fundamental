@@ -23,13 +23,22 @@ Enjoy our large selection of crafting tables, now available in all vanilla color
 
 **Slime on piston**
 
+![Placing slime on a piston](docs/screenshots/slime-on-piston.png)
+
 You can place slime on a piston by right-clicking slime on a piston face.
 
-![Placing slime on a piston](docs/screenshots/slime-on-piston.png)
+![Placing slime on a piston](docs/screenshots/slime-off-piston.png)
 
 You can also use an axe to scrape that slime off. (You don't get the slimeball back).
 
-![Placing slime on a piston](docs/screenshots/slime-off-piston.png)
+**Bonemeal Spreads Grass**
+
+![Player using bonemeal on dirt to spread grass](docs/screenshots/bonemeal-grass.apng)
+
+Like with Nylium, you can use bonemeal on dirt that is neighboring grass to spread that grass quicker.
+
+Built in support for Quark, Botania, Tinker's Construct, and Biomes You'll Go.  
+Extra support can be added through the configuration file. PRs are also welcome.
 
 **Bound Lodestone**
 

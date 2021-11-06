@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:crimson_nylium"
+  ],
+  "optional": [
+    "byg:overgrown_crimson_blackstone"
+  ]
+}

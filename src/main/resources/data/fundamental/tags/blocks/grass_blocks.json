@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:grass_block"
+  ],
+  "optional": [
+    "byg:overgrown_stone",
+    "byg:overgrown_netherrack",
+    "byg:meadow_grass_block",
+    "byg:overgrown_dacite"
+  ]
+}

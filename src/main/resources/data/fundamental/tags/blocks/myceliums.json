@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:mycelium"
+  ],
+  "optional": [
+    "byg:mycelium_netherrack"
+  ]
+}

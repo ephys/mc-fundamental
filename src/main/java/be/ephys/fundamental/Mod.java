@@ -1,10 +1,13 @@
 package be.ephys.fundamental;
 
+import be.ephys.cookiecore.config.ConfigSynchronizer;
+import be.ephys.fundamental.bonemeal_grass.BonemealGrassModule;
 import be.ephys.fundamental.bound_lodestone.BoundLodestoneModule;
 import be.ephys.fundamental.named_lodestone.NamedLodeStoneFeature;
 import be.ephys.fundamental.slime_on_piston.SlimeOnPistonFeature;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,12 +18,17 @@ public class Mod {
   public static final Logger LOGGER = LogManager.getLogger();
 
   public Mod() {
+    ConfigSynchronizer.synchronizeConfig();
+
     CraftingTableModule.init();
     BoundLodestoneModule.init();
 
     // make sign "pass-through" for lodestones, unless passthroughsigns is installed as they handle it already
     MinecraftForge.EVENT_BUS.register(new NamedLodeStoneFeature());
     MinecraftForge.EVENT_BUS.register(new SlimeOnPistonFeature());
+    MinecraftForge.EVENT_BUS.register(new BonemealGrassModule());
+
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(BonemealGrassModule::onCommonSetup);
 
     ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
   }
