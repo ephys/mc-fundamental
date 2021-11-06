@@ -21,6 +21,12 @@ Enjoy our large selection of crafting tables, now available in all vanilla color
 
 *Tip*: custom crafting tables can be crafting into regular crafting tables. Mainly as a workaround for recipes that demand a vanilla table.
 
+**Slime on piston**
+
+You can place slime on a piston by right-clicking slime on a piston face.
+
+![Placing slime on a piston](docs/screenshots/slime-on-piston.png)
+
 **Bound Lodestone**
 
 ![A villager upgrading your lodestone](docs/screenshots/bound-lodestone.png)
