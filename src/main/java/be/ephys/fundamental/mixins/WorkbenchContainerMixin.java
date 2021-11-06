@@ -1,6 +1,6 @@
 package be.ephys.fundamental.mixins;
 
-import be.ephys.fundamental.ModRegistry;
+import be.ephys.fundamental.CraftingTableModule;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.WorkbenchContainer;
@@ -28,7 +28,7 @@ public class WorkbenchContainerMixin {
       return;
     }
 
-    cir.setReturnValue(isWithinUsableDistance(this.worldPosCallable, playerIn, ModRegistry.CRAFTING_TABLE_TAG_WRAPPER));
+    cir.setReturnValue(isWithinUsableDistance(this.worldPosCallable, playerIn, CraftingTableModule.CRAFTING_TABLE_TAG_WRAPPER));
   }
 
   private static boolean isWithinUsableDistance(IWorldPosCallable worldPos, PlayerEntity playerIn, ITag<Block> targetTag) {

@@ -1,7 +1,7 @@
 package be.ephys.fundamental;
 
 import be.ephys.fundamental.bound_lodestone.BoundLodestoneModule;
-import be.ephys.fundamental.named_lodestone.NamedLodeStoneEventHandler;
+import be.ephys.fundamental.named_lodestone.NamedLodeStoneFeature;
 import be.ephys.fundamental.slime_on_piston.SlimeOnPistonFeature;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,11 +15,11 @@ public class Mod {
   public static final Logger LOGGER = LogManager.getLogger();
 
   public Mod() {
-    ModRegistry.init();
+    CraftingTableModule.init();
     BoundLodestoneModule.init();
 
     // make sign "pass-through" for lodestones, unless passthroughsigns is installed as they handle it already
-    MinecraftForge.EVENT_BUS.addListener(NamedLodeStoneEventHandler::onRightClickSignWithCompass);
+    MinecraftForge.EVENT_BUS.register(new NamedLodeStoneFeature());
 
     MinecraftForge.EVENT_BUS.register(new SlimeOnPistonFeature());
 

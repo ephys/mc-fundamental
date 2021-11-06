@@ -16,15 +16,17 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 
-public class NamedLodeStoneEventHandler {
+public class NamedLodeStoneFeature {
   /**
    * Part of the Sign-on-a-lodestone renames your compass.
    *
    * Makes signs on Lodestones & Bound Lodestones pass-through for right-clicks with a compass.
    */
-  public static void onRightClickSignWithCompass(PlayerInteractEvent.RightClickBlock event) {
+  @SubscribeEvent
+  public void onRightClickSignWithCompass(PlayerInteractEvent.RightClickBlock event) {
     ItemStack itemStack = event.getItemStack();
 
     if (itemStack.getItem() != Items.COMPASS) {
@@ -56,7 +58,7 @@ public class NamedLodeStoneEventHandler {
     event.setCancellationResult(ActionResultType.SUCCESS);
   }
 
-  private static void rightClick(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack, Hand hand, Direction facingOpposite) {
+  private void rightClick(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack, Hand hand, Direction facingOpposite) {
     if (hand != Hand.MAIN_HAND) {
       return;
     }

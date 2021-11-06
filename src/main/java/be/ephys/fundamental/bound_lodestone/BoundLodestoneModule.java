@@ -1,7 +1,7 @@
 package be.ephys.fundamental.bound_lodestone;
 
 import be.ephys.fundamental.Mod;
-import be.ephys.fundamental.ModRegistry;
+import be.ephys.fundamental.CraftingTableModule;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -34,11 +34,11 @@ public class BoundLodestoneModule {
   public static final Feature<NoFeatureConfig> BoundLodestoneFeature = new BoundLodestoneFeature(NoFeatureConfig.field_236558_a_); // .CODEC
   public static final ConfiguredFeature<?, ?> BoundLodestoneConfiguredFeature = BoundLodestoneFeature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
 
-  public static final RegistryObject<Block> BOUND_LODESTONE = ModRegistry.BLOCKS.register("bound_lodestone", () ->
+  public static final RegistryObject<Block> BOUND_LODESTONE = CraftingTableModule.BLOCKS.register("bound_lodestone", () ->
     new BoundLodestoneBlock(AbstractBlock.Properties.create(Material.ANVIL).setRequiresTool().hardnessAndResistance(3.5F).sound(SoundType.LODESTONE))
   );
 
-  public static final RegistryObject<Item> BOUND_LODESTONE_ITEM = ModRegistry.ITEMS.register("bound_lodestone", () ->
+  public static final RegistryObject<Item> BOUND_LODESTONE_ITEM = CraftingTableModule.ITEMS.register("bound_lodestone", () ->
     new BlockItem(BOUND_LODESTONE.get(), new Item.Properties().group(ItemGroup.DECORATIONS))
   );
 
