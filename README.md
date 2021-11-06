@@ -27,6 +27,10 @@ You can place slime on a piston by right-clicking slime on a piston face.
 
 ![Placing slime on a piston](docs/screenshots/slime-on-piston.png)
 
+You can also use an axe to scrape that slime off. (You don't get the slimeball back).
+
+![Placing slime on a piston](docs/screenshots/slime-off-piston.png)
+
 **Bound Lodestone**
 
 ![A villager upgrading your lodestone](docs/screenshots/bound-lodestone.png)
