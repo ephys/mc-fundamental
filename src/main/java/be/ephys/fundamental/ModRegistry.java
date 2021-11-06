@@ -19,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModRegistry {
 
-  public static final ResourceLocation CRAFTING_TABLE_TAG = new ResourceLocation(Mod.MODID, "crafting_table");
+  public static final ResourceLocation CRAFTING_TABLE_TAG = new ResourceLocation("forge", "workbenches");
   public static final ITag.INamedTag<Block> CRAFTING_TABLE_TAG_WRAPPER = BlockTags.makeWrapperTag(CRAFTING_TABLE_TAG.toString());
 
   public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Mod.MODID);
