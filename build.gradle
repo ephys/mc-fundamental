@@ -101,8 +101,8 @@ repositories {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/ephys/cookiecore")
         credentials {
-            username = project.findProperty("gpr.user") as String ?: System.getenv("GH_MVN_USERNAME")
-            password = project.findProperty("gpr.key") as String ?: System.getenv("GH_MVN_PASSWORD")
+            username = 'ephyspotato@gmail.com' // project.findProperty("gpr.user") as String ?: System.getenv("GH_MVN_USERNAME")
+            password = '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' // project.findProperty("gpr.key") as String ?: System.getenv("GH_MVN_PASSWORD")
         }
     }
 }
