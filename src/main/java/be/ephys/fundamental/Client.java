@@ -39,9 +39,11 @@ public class Client {
     // TODO:
     //  - make "item color respects biome" disableable
     //  - make "mossy cobblestone respects biome" disableable
-    //  - make "mossy stone brick respects biome" disableable
+    //  - make "mossy stone brick respects biome" disableableh
     //  These last two require loading resource pack dynamically:
     //   https://forums.minecraftforge.net/topic/76224-is-there-a-way-to-dynamically-change-vanilla-block-textures/
+
+    // TODO (config?): Make moss color more like the vanilla block based on Y level (the deeper you go the more like vanilla it is).
 
     Block[] mossyStoneBricks = new Block[]{
       Blocks.MOSSY_STONE_BRICKS,

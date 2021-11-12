@@ -52,9 +52,9 @@ Extra support can be added through the configuration file. PRs are also welcome.
 
 [View gallery](docs/screenshots/mossy_cobblestone)
 
-Color values can still be changed. PR welcome.
+Also available for Mossy stone bricks. Disabled by default. 
 
-Also available for Mossy stone bricks, but disabled by default.
+If you make a ressource pack that improves the moss overlay, send it our way!
 
 **Bound Lodestone**
 
