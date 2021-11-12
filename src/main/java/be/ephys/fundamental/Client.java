@@ -1,5 +1,7 @@
 package be.ephys.fundamental;
 
+import com.google.common.collect.Lists;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -21,6 +23,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(
   modid = be.ephys.fundamental.Mod.MODID,
@@ -28,13 +33,56 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
   value = Dist.CLIENT
 )
 public class Client {
+
   @SubscribeEvent
   public static void setupClient(final FMLClientSetupEvent event) {
-    RenderTypeLookup.setRenderLayer(Blocks.MOSSY_COBBLESTONE, RenderType.getCutoutMipped());
+    // TODO:
+    //  - make "item color respects biome" disableable
+    //  - make "mossy cobblestone respects biome" disableable
+    //  - make "mossy stone brick respects biome" disableable
+    //  These last two require loading resource pack dynamically:
+    //   https://forums.minecraftforge.net/topic/76224-is-there-a-way-to-dynamically-change-vanilla-block-textures/
+
+    Block[] mossyStoneBricks = new Block[]{
+      Blocks.MOSSY_STONE_BRICKS,
+      Blocks.INFESTED_MOSSY_STONE_BRICKS,
+//      Blocks.MOSSY_STONE_BRICK_SLAB,
+//      Blocks.MOSSY_STONE_BRICK_STAIRS,
+//      Blocks.MOSSY_STONE_BRICK_WALL
+    };
+
+    Block[] mossyCobblestone = new Block[]{
+      Blocks.MOSSY_COBBLESTONE,
+//      Blocks.MOSSY_COBBLESTONE_SLAB,
+//      Blocks.MOSSY_COBBLESTONE_STAIRS,
+//      Blocks.MOSSY_COBBLESTONE_WALL,
+    };
+
+    List<Block> allMossy = new ArrayList<>();
+    allMossy.addAll(Lists.newArrayList(mossyStoneBricks));
+    allMossy.addAll(Lists.newArrayList(mossyCobblestone));
+
+    for (Block block : allMossy) {
+      RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped());
+    }
 
     Minecraft.getInstance().getBlockColors().register((state, reader, pos, color) -> {
       return reader != null && pos != null ? BiomeColors.getGrassColor(reader, pos) : GrassColors.get(0.5D, 1.0D);
-    }, Blocks.MOSSY_COBBLESTONE);
+    }, allMossy.toArray(new Block[allMossy.size()]));
+
+    allMossy.add(Blocks.GRASS_BLOCK);
+    allMossy.add(Blocks.GRASS);
+    allMossy.add(Blocks.FERN);
+    allMossy.add(Blocks.VINE);
+    allMossy.add(Blocks.LILY_PAD);
+    allMossy.add(Blocks.TALL_GRASS);
+    allMossy.add(Blocks.LARGE_FERN);
+    allMossy.add(Blocks.OAK_LEAVES);
+    allMossy.add(Blocks.SPRUCE_LEAVES);
+    allMossy.add(Blocks.BIRCH_LEAVES);
+    allMossy.add(Blocks.JUNGLE_LEAVES);
+    allMossy.add(Blocks.ACACIA_LEAVES);
+    allMossy.add(Blocks.DARK_OAK_LEAVES);
 
     Minecraft.getInstance().getItemColors().register((stack, color) -> {
       World reader = Minecraft.getInstance().world;
@@ -42,6 +90,6 @@ public class Client {
       BlockPos pos = player == null ? null : player.getPosition();
 
       return reader != null && pos != null ? BiomeColors.getGrassColor(reader, pos) : GrassColors.get(0.5D, 1.0D);
-    }, Blocks.MOSSY_COBBLESTONE, Blocks.GRASS_BLOCK, Blocks.GRASS, Blocks.FERN, Blocks.VINE, Blocks.OAK_LEAVES, Blocks.SPRUCE_LEAVES, Blocks.BIRCH_LEAVES, Blocks.JUNGLE_LEAVES, Blocks.ACACIA_LEAVES, Blocks.DARK_OAK_LEAVES, Blocks.LILY_PAD);
+    }, allMossy.toArray(new Block[allMossy.size()]));
   }
 }

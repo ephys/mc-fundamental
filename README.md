@@ -46,6 +46,15 @@ Extra support can be added through the configuration file. PRs are also welcome.
 
 ![A grass block item in a dark forest biome](docs/screenshots/grass-color-dark-forest.png)
 
+**Mossy stones follow biome colors**
+
+![Mossy cobblestone in a spruce taiga](docs/screenshots/mossy_cobblestone/spruce_taiga.png)
+
+[View gallery](docs/screenshots/mossy_cobblestone)
+
+Color values can still be changed. PR welcome.
+
+Also available for Mossy stone bricks, but disabled by default.
 
 **Bound Lodestone**
 
