@@ -52,7 +52,7 @@ Extra support can be added through the configuration file. PRs are also welcome.
 
 [View gallery](docs/screenshots/mossy_cobblestone)
 
-Also available for Mossy stone bricks. Disabled by default. 
+Also available for Mossy stone bricks.
 
 If you make a ressource pack that improves the moss overlay, send it our way!
 
