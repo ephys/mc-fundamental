@@ -8,8 +8,10 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.ColorCache;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
+import net.minecraft.util.ColorHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GrassColors;
 import net.minecraft.world.World;
@@ -22,6 +24,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.jline.utils.Colors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +52,14 @@ public class Client {
       Blocks.MOSSY_STONE_BRICKS,
       Blocks.INFESTED_MOSSY_STONE_BRICKS,
       Blocks.MOSSY_STONE_BRICK_SLAB,
-//      Blocks.MOSSY_STONE_BRICK_STAIRS,
+      Blocks.MOSSY_STONE_BRICK_STAIRS,
 //      Blocks.MOSSY_STONE_BRICK_WALL
     };
 
     Block[] mossyCobblestone = new Block[]{
       Blocks.MOSSY_COBBLESTONE,
       Blocks.MOSSY_COBBLESTONE_SLAB,
-//      Blocks.MOSSY_COBBLESTONE_STAIRS,
+      Blocks.MOSSY_COBBLESTONE_STAIRS,
 //      Blocks.MOSSY_COBBLESTONE_WALL,
     };
 
@@ -68,6 +71,8 @@ public class Client {
       RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped());
     }
 
+    // TODO: as we go down in Y level, gradient to VANILLA_COLOR
+//    final int VANILLA_COLOR = 9551193;
     Minecraft.getInstance().getBlockColors().register((state, reader, pos, color) -> {
       return reader != null && pos != null ? BiomeColors.getGrassColor(reader, pos) : GrassColors.get(0.5D, 1.0D);
     }, allMossy.toArray(new Block[allMossy.size()]));

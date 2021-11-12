@@ -1,5 +1,5 @@
 {
-  "parent": "fundamental:block/block_all_overlay",
+  "parent": "fundamental:block/templates/block_all_overlay",
   "textures": {
     "all": "block/stone_bricks",
     "overlay": "fundamental:block/mossy_stone_bricks_overlay"

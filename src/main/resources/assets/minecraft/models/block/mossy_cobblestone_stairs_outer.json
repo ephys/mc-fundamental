@@ -1,0 +1,7 @@
+{
+  "parent": "fundamental:block/templates/outer_stairs_all_overlay",
+  "textures": {
+    "all": "minecraft:block/mossy_cobblestone",
+    "overlay": "fundamental:block/mossy_cobblestone_overlay"
+  }
+}
