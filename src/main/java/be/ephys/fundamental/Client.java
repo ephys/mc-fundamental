@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.BlockColors;
@@ -18,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -46,6 +48,15 @@ public class Client {
     //  These last two require loading resource pack dynamically:
     //   https://forums.minecraftforge.net/topic/76224-is-there-a-way-to-dynamically-change-vanilla-block-textures/
 
+    // In constructor, on client side (not FMLClientSetupEvent), if "mossy cobble" is true
+    //   Add resource pack with vanilla texture override:
+    //      Minecraft.getInstance().getResourcePackList().addPackFinder();
+    //   Enable it if we added it for the first time
+    //      ResourcePackList#setEnabledPacks()
+    //   In pack comment: say that can be disabled through config
+    // after pack change: Minecraft#reloadResources(); (or just call model manager reload)
+    // might not be necessary
+
     // TODO (config?): Make moss color more like the vanilla block based on Y level (the deeper you go the more like vanilla it is).
 
     Block[] mossyStoneBricks = new Block[]{
@@ -53,14 +64,14 @@ public class Client {
       Blocks.INFESTED_MOSSY_STONE_BRICKS,
       Blocks.MOSSY_STONE_BRICK_SLAB,
       Blocks.MOSSY_STONE_BRICK_STAIRS,
-//      Blocks.MOSSY_STONE_BRICK_WALL
+      Blocks.MOSSY_STONE_BRICK_WALL
     };
 
     Block[] mossyCobblestone = new Block[]{
       Blocks.MOSSY_COBBLESTONE,
       Blocks.MOSSY_COBBLESTONE_SLAB,
       Blocks.MOSSY_COBBLESTONE_STAIRS,
-//      Blocks.MOSSY_COBBLESTONE_WALL,
+      Blocks.MOSSY_COBBLESTONE_WALL,
     };
 
     List<Block> allMossy = new ArrayList<>();

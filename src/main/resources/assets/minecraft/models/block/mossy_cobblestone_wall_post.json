@@ -1,0 +1,7 @@
+{
+  "parent": "fundamental:block/templates/wall_post",
+  "textures": {
+    "wall": "block/cobblestone",
+    "overlay": "fundamental:block/mossy_cobblestone_overlay"
+  }
+}
