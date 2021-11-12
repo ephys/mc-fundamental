@@ -48,14 +48,14 @@ public class Client {
     Block[] mossyStoneBricks = new Block[]{
       Blocks.MOSSY_STONE_BRICKS,
       Blocks.INFESTED_MOSSY_STONE_BRICKS,
-//      Blocks.MOSSY_STONE_BRICK_SLAB,
+      Blocks.MOSSY_STONE_BRICK_SLAB,
 //      Blocks.MOSSY_STONE_BRICK_STAIRS,
 //      Blocks.MOSSY_STONE_BRICK_WALL
     };
 
     Block[] mossyCobblestone = new Block[]{
       Blocks.MOSSY_COBBLESTONE,
-//      Blocks.MOSSY_COBBLESTONE_SLAB,
+      Blocks.MOSSY_COBBLESTONE_SLAB,
 //      Blocks.MOSSY_COBBLESTONE_STAIRS,
 //      Blocks.MOSSY_COBBLESTONE_WALL,
     };

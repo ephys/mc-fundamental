@@ -1,0 +1,7 @@
+{
+  "parent": "fundamental:block/slab_all_overlay",
+  "textures": {
+    "all": "block/cobblestone",
+    "overlay": "fundamental:block/mossy_cobblestone_overlay"
+  }
+}
