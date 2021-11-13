@@ -36,10 +36,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-// TODO:
-//  - inventory_items_respect_biome_colors = false does not work well with mossy_stone_bricks_follows_biome_colors
-//  - support loading resource pack from a zip -> directory
-
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(
   modid = be.ephys.fundamental.Mod.MODID,
@@ -87,7 +83,7 @@ public class MossModule {
   private static void addPack(Consumer<ResourcePackInfo> resourcePackInfoConsumer, ResourcePackInfo.IFactory factory) {
     Supplier<IResourcePack> mossyCobblestonePackSupplier = ExtraModResourcePack.createSupplier(
       be.ephys.fundamental.Mod.MODID,
-      "/fundamental_mossy_cobblestone"
+      "fundamental_mossy_cobblestone"
     );
 
     resourcePackInfoConsumer.accept(factory.create(
@@ -104,7 +100,7 @@ public class MossModule {
 
     Supplier<IResourcePack> mossyStoneBricksPackSupplier = ExtraModResourcePack.createSupplier(
       be.ephys.fundamental.Mod.MODID,
-      "/fundamental_mossy_stone_bricks"
+      "fundamental_mossy_stone_bricks"
     );
 
     resourcePackInfoConsumer.accept(factory.create(
@@ -213,13 +209,14 @@ public class MossModule {
       allMossy.addAll(Lists.newArrayList(mossyCobblestone));
     }
 
+    // TODO: as we go down in Y level, gradient to VANILLA_COLOR
+    final int MOSS_BLOCKS_VANILLA_COLOR = 9551193;
+
     if (allMossy.size() > 0) {
       for (Block block : allMossy) {
         RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped());
       }
 
-      // TODO: as we go down in Y level, gradient to VANILLA_COLOR
-      // final int VANILLA_COLOR = 9551193;
       Minecraft.getInstance().getBlockColors().register((state, reader, pos, color) -> {
         return reader != null && pos != null ? BiomeColors.getGrassColor(reader, pos) : GrassColors.get(0.5D, 1.0D);
       }, allMossy.toArray(new Block[allMossy.size()]));
@@ -246,6 +243,10 @@ public class MossModule {
         BlockPos pos = player == null ? null : player.getPosition();
 
         return reader != null && pos != null ? BiomeColors.getGrassColor(reader, pos) : GrassColors.get(0.5D, 1.0D);
+      }, allMossy.toArray(new Block[allMossy.size()]));
+    } else if (allMossy.size() > 0) {
+      Minecraft.getInstance().getItemColors().register((stack, color) -> {
+        return MOSS_BLOCKS_VANILLA_COLOR;
       }, allMossy.toArray(new Block[allMossy.size()]));
     }
   }
