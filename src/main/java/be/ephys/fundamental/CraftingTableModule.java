@@ -25,10 +25,6 @@ public class CraftingTableModule {
   public static final ResourceLocation CRAFTING_TABLE_TAG = new ResourceLocation("forge", "workbenches");
   public static final ITag.INamedTag<Block> CRAFTING_TABLE_TAG_WRAPPER = BlockTags.makeWrapperTag(CRAFTING_TABLE_TAG.toString());
 
-  public static void init() {
-
-  }
-
   private static final Item.Properties CraftingTableItemProperties = new Item.Properties().group(ItemGroup.DECORATIONS);
 
   private static AbstractBlock.Properties createWood(MaterialColor color) {

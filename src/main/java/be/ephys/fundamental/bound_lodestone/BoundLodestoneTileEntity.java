@@ -13,7 +13,7 @@ public class BoundLodestoneTileEntity extends TileEntity implements ITickableTil
   private BlockPos boundTo;
 
   public BoundLodestoneTileEntity() {
-    super(BoundLodestoneModule.boundLodestoneTeType);
+    super(BoundLodestoneModule.BOUND_LODESTONE_TE_TYPE.get());
   }
 
   @Override

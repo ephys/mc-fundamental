@@ -23,14 +23,18 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.List;
 import java.util.function.Supplier;
 
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(
+  modid = be.ephys.fundamental.Mod.MODID,
+  bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+)
 public class BoundLodestoneModule {
   @Config(name = "lodestone.bound_lodestone", description = "Adds a lodestone proxy that when used sets your compass to another lodestone.")
   @Config.BooleanDefault(true)
@@ -47,12 +51,12 @@ public class BoundLodestoneModule {
     new BlockItem(BOUND_LODESTONE.get(), new Item.Properties().group(ItemGroup.DECORATIONS))
   );
 
-  public static TileEntityType<BoundLodestoneTileEntity> boundLodestoneTeType;
+  public static final RegistryObject<TileEntityType<BoundLodestoneTileEntity>> BOUND_LODESTONE_TE_TYPE = Mod.TILE_ENTITIES.register("bound_lodestone", () ->
+    TileEntityType.Builder.create(BoundLodestoneTileEntity::new, BOUND_LODESTONE.get()).build(null)
+  );
 
-  public static void init() {
-    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    modEventBus.addGenericListener(TileEntityType.class, BoundLodestoneModule::registerTileEntities);
-
+  @SubscribeEvent
+  public static void onCommonSetup(FMLCommonSetupEvent event) {
     if (enabled.get()) {
       MinecraftForge.EVENT_BUS.addListener(BoundLodestoneModule::onVillagerTrades);
     }
@@ -81,14 +85,6 @@ public class BoundLodestoneModule {
         )
       );
     }
-  }
-
-  public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt) {
-    TileEntityType<BoundLodestoneTileEntity> type = TileEntityType.Builder.create(BoundLodestoneTileEntity::new, BOUND_LODESTONE.get()).build(null);
-    type.setRegistryName(Mod.id("bound_lodestone"));
-    evt.getRegistry().register(type);
-
-    boundLodestoneTeType = type;
   }
 
   public static void registerFeatures(RegistryEvent.Register<Feature<?>> event) {

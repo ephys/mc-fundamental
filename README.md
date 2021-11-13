@@ -2,6 +2,8 @@
 
 ## Features
 
+Features can be turned off through the configuration file.
+
 **Named Lodestone Compass**
 
 ![A lodestone named using a sign](docs/screenshots/named-lodestone.png)

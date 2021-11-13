@@ -9,5 +9,7 @@
   "block.fundamental.warped_crafting_table": "Warped Crafting Table",
   "block.fundamental.bound_lodestone": "Bound Lodestone",
   "messages.fundamental.not_a_lodestone_compass": "This compass is not bound",
-  "messages.fundamental.your_lodestone_is_in_another_castle": "Your compass is scrambled and fails to bind the lodestone"
+  "messages.fundamental.your_lodestone_is_in_another_castle": "Your compass is scrambled and fails to bind the lodestone",
+  "fundamental.pack.mossy_stone_bricks.description": "Controlled by fundamental. Enable/disable through config. Makes mossy stone brick have a biome tint.",
+  "fundamental.pack.mossy_cobblestone.description": "Controlled by fundamental. Enable/disable through config. Makes mossy cobblestone have a biome tint."
 }
