@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(
+  modid = be.ephys.fundamental.Mod.MODID,
+  bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+)
 public class BonemealGrassModule {
   @Config(
     name = "spread_grass_with_bonemeal.mapping",
@@ -29,6 +34,8 @@ public class BonemealGrassModule {
       + "\nOne mapping per array entry."
       + "\nEach entry has 3 parts separated by a space:"
       + "\n<dirt_block>(block ID) <source_grass_block>(block ID or block #tag) <generated_grass_block>(block ID)"
+      + "\nA <dirt_block> that is near a <source_grass_block> will turn into <generated_grass_block> when bonemealed."
+      + "\nEmpty the list to disable this feature."
   )
   @Config.StringListDefault({
     // vanilla
@@ -94,13 +101,12 @@ public class BonemealGrassModule {
   })
   public static ForgeConfigSpec.ConfigValue<List<String>> spreadablesMappingRaw;
 
-  public static boolean isEnabled() {
-    return spreadablesMappingRaw.get().size() > 0;
-  }
-
+  @SubscribeEvent
   public static void onCommonSetup(FMLCommonSetupEvent t) {
     // initialize mapping
     getSpreadableMapping();
+
+    MinecraftForge.EVENT_BUS.addListener(BonemealGrassModule::onBoneMealUse);
   }
 
   private static class SpreadableMappingEntry {
@@ -187,8 +193,7 @@ public class BonemealGrassModule {
     return spreadableMappingCache;
   }
 
-  @SubscribeEvent
-  public void onBoneMealUse(BonemealEvent event) {
+  public static void onBoneMealUse(BonemealEvent event) {
     BlockState dirtBlock = event.getBlock();
 
     Map<Block, List<SpreadableMappingEntry>> dirtToGrassMapping = getSpreadableMapping();

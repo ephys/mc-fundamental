@@ -28,6 +28,6 @@ description='''
 [[dependencies.fundamental]]
     modId="cookiecore"
     mandatory=true
-    versionRange="[1.16.5-3.2.0,)"
+    versionRange="[3.3.0,)"
     ordering="AFTER"
     side="BOTH"

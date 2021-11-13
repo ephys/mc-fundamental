@@ -1,7 +1,7 @@
 package be.ephys.fundamental.bound_lodestone;
 
+import be.ephys.cookiecore.config.Config;
 import be.ephys.fundamental.Mod;
-import be.ephys.fundamental.CraftingTableModule;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -18,6 +18,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.common.BasicTrade;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -31,14 +32,18 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class BoundLodestoneModule {
+  @Config(name = "lodestone.bound_lodestone", description = "Adds a lodestone proxy that when used sets your compass to another lodestone.")
+  @Config.BooleanDefault(true)
+  public static ForgeConfigSpec.BooleanValue enabled;
+
   public static final Feature<NoFeatureConfig> BoundLodestoneFeature = new BoundLodestoneFeature(NoFeatureConfig.field_236558_a_); // .CODEC
   public static final ConfiguredFeature<?, ?> BoundLodestoneConfiguredFeature = BoundLodestoneFeature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
 
-  public static final RegistryObject<Block> BOUND_LODESTONE = CraftingTableModule.BLOCKS.register("bound_lodestone", () ->
+  public static final RegistryObject<Block> BOUND_LODESTONE = Mod.BLOCKS.register("bound_lodestone", () ->
     new BoundLodestoneBlock(AbstractBlock.Properties.create(Material.ANVIL).setRequiresTool().hardnessAndResistance(3.5F).sound(SoundType.LODESTONE))
   );
 
-  public static final RegistryObject<Item> BOUND_LODESTONE_ITEM = CraftingTableModule.ITEMS.register("bound_lodestone", () ->
+  public static final RegistryObject<Item> BOUND_LODESTONE_ITEM = Mod.ITEMS.register("bound_lodestone", () ->
     new BlockItem(BOUND_LODESTONE.get(), new Item.Properties().group(ItemGroup.DECORATIONS))
   );
 
@@ -47,7 +52,10 @@ public class BoundLodestoneModule {
   public static void init() {
     IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     modEventBus.addGenericListener(TileEntityType.class, BoundLodestoneModule::registerTileEntities);
-    MinecraftForge.EVENT_BUS.addListener(BoundLodestoneModule::onVillagerTrades);
+
+    if (enabled.get()) {
+      MinecraftForge.EVENT_BUS.addListener(BoundLodestoneModule::onVillagerTrades);
+    }
 
     // Upcoming
     // modEventBus.addGenericListener(Feature.class, BoundLodestoneModule::registerFeatures);

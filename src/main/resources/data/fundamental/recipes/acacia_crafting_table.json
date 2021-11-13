@@ -13,5 +13,11 @@
   "result": {
     "item": "fundamental:acacia_crafting_table",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "fundamental:boolean_config",
+      "config": "crafting_tables"
+    }
+  ]
 }

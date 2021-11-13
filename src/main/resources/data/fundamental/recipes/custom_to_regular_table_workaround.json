@@ -3,11 +3,17 @@
   "group": "crafting_table",
   "ingredients": [
     {
-      "tag": "fundamental:crafting_table"
+      "tag": "forge:workbenches"
     }
   ],
   "result": {
     "item": "minecraft:crafting_table",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "fundamental:boolean_config",
+      "config": "crafting_tables"
+    }
+  ]
 }

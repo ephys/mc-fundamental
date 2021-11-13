@@ -1,5 +1,6 @@
 package be.ephys.fundamental.slime_on_piston;
 
+import be.ephys.cookiecore.config.Config;
 import be.ephys.fundamental.helpers.BlockHelper;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,19 +12,47 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-public class SlimeOnPistonFeature {
+@Mod.EventBusSubscriber(
+  modid = be.ephys.fundamental.Mod.MODID,
+  bus = Mod.EventBusSubscriber.Bus.MOD
+)
+public class SlimeOnPistonModule {
+
+  @Config(name = "use_slime_on_piston", description = "Use slime on a piston face to turn it into a sticky piston")
+  @Config.BooleanDefault(true)
+  public static ForgeConfigSpec.BooleanValue addSlimeEnabled;
+
+  @Config(name = "use_axe_on_sticky_piston", description = "Use an axe on a sticky piston face to turn it into a regular piston")
+  @Config.BooleanDefault(true)
+  public static ForgeConfigSpec.BooleanValue removeSlimeEnabled;
 
   public static final Tags.IOptionalNamedTag<Item> slimeballsTag = ItemTags.createOptional(new ResourceLocation("forge", "slimeballs"));
   public static final Tags.IOptionalNamedTag<Item> axesTag = ItemTags.createOptional(new ResourceLocation("forge", "tools/axes"));
 
   @SubscribeEvent
-  public void slimeThatPiston(PlayerInteractEvent.RightClickBlock event) {
+  public static void onCommonSetup(FMLCommonSetupEvent event) {
+    if (addSlimeEnabled.get()) {
+      MinecraftForge.EVENT_BUS.addListener(SlimeOnPistonModule::slimeThatPiston);
+    }
+
+    if (removeSlimeEnabled.get()) {
+      MinecraftForge.EVENT_BUS.addListener(SlimeOnPistonModule::axeThatPiston);
+    }
+  }
+
+  public static void slimeThatPiston(PlayerInteractEvent.RightClickBlock event) {
     ItemStack usedItemStack = event.getItemStack();
-    if (usedItemStack.getItem() != Items.SLIME_BALL && !usedItemStack.getItem().isIn(slimeballsTag)) {
+    if (!usedItemStack.getItem().isIn(slimeballsTag)) {
       return;
     }
 
@@ -71,8 +100,7 @@ public class SlimeOnPistonFeature {
     event.setCancellationResult(world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME);
   }
 
-  @SubscribeEvent
-  public void axeThatPiston(PlayerInteractEvent.RightClickBlock event) {
+  public static void axeThatPiston(PlayerInteractEvent.RightClickBlock event) {
     ItemStack usedItemStack = event.getItemStack();
     if (!usedItemStack.getItem().isIn(axesTag)) {
       return;
