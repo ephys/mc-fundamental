@@ -8,8 +8,8 @@ version="${mod_version}"
 displayName="Fundamental"
 #updateJSONURL="http://myurl.me/"
 displayURL="https://github.com/Ephys/mc-fundamental"
-logoFile="examplemod.png"
-credits="Thanks for this example mod goes to Java"
+logoFile="logo.png"
+credits=""
 authors="Ephys, FlandersAustin"
 description='''
 '''
