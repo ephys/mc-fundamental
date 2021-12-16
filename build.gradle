@@ -116,7 +116,7 @@ dependencies {
     // https://github.com/Ephys/CookieCore/packages/102415
     // You'll need to authenticate to Github Packages
     // See https://docs.github.com/en/packages/guides/configuring-gradle-for-use-with-github-packages#authenticating-to-github-packages
-    compile fg.deobf('be.ephys.cookiecore:cookiecore:1.16.5-3.3.0-12106d24')
+    compile fg.deobf('be.ephys.cookiecore:cookiecore:1.16.5-3.3.1-9c789eff')
 }
 
 // Process resources on build: set the version in the mods.toml
