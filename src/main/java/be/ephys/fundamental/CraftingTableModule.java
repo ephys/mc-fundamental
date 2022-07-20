@@ -1,20 +1,20 @@
 package be.ephys.fundamental;
 
 import be.ephys.cookiecore.config.Config;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.CraftingTableBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CraftingTableBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 
 public class CraftingTableModule {
 
@@ -23,16 +23,16 @@ public class CraftingTableModule {
   public static ForgeConfigSpec.BooleanValue enabled; // read by JSON recipes
 
   public static final ResourceLocation CRAFTING_TABLE_TAG = new ResourceLocation("forge", "workbenches");
-  public static final ITag.INamedTag<Block> CRAFTING_TABLE_TAG_WRAPPER = BlockTags.makeWrapperTag(CRAFTING_TABLE_TAG.toString());
+  public static final TagKey<Block> CRAFTING_TABLE_TAG_WRAPPER = BlockTags.create(CRAFTING_TABLE_TAG);
 
-  private static final Item.Properties CraftingTableItemProperties = new Item.Properties().group(ItemGroup.DECORATIONS);
+  private static final Item.Properties CraftingTableItemProperties = new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS);
 
-  private static AbstractBlock.Properties createWood(MaterialColor color) {
-    return AbstractBlock.Properties.create(Material.WOOD, color).hardnessAndResistance(2.5F).sound(SoundType.WOOD);
+  private static BlockBehaviour.Properties createWood(MaterialColor color) {
+    return BlockBehaviour.Properties.of(Material.WOOD, color).strength(2.5F).sound(SoundType.WOOD);
   }
 
-  private static AbstractBlock.Properties createNetherWood(MaterialColor color) {
-    return AbstractBlock.Properties.create(Material.NETHER_WOOD, color).hardnessAndResistance(2.5F).sound(SoundType.WOOD);
+  private static BlockBehaviour.Properties createNetherWood(MaterialColor color) {
+    return BlockBehaviour.Properties.of(Material.NETHER_WOOD, color).strength(2.5F).sound(SoundType.WOOD);
   }
 
   // WARPED
@@ -58,7 +58,7 @@ public class CraftingTableModule {
   // ACACIA
 
   public static final RegistryObject<Block> ACACIA_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("acacia_crafting_table", () ->
-    new CraftingTableBlock(createWood(MaterialColor.ADOBE))
+    new CraftingTableBlock(createWood(MaterialColor.COLOR_ORANGE))
   );
 
   public static final RegistryObject<Item> ACACIA_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("acacia_crafting_table", () ->
@@ -78,7 +78,7 @@ public class CraftingTableModule {
   // DARK OAK
 
   public static final RegistryObject<Block> DARK_OAK_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("dark_oak_crafting_table", () ->
-    new CraftingTableBlock(createWood(MaterialColor.BROWN))
+    new CraftingTableBlock(createWood(MaterialColor.COLOR_BROWN))
   );
 
   public static final RegistryObject<Item> DARK_OAK_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("dark_oak_crafting_table", () ->
@@ -98,7 +98,7 @@ public class CraftingTableModule {
   // SPRUCE
 
   public static final RegistryObject<Block> SPRUCE_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("spruce_crafting_table", () ->
-    new CraftingTableBlock(createWood(MaterialColor.OBSIDIAN))
+    new CraftingTableBlock(createWood(MaterialColor.PODZOL))
   );
 
   public static final RegistryObject<Item> SPRUCE_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("spruce_crafting_table", () ->

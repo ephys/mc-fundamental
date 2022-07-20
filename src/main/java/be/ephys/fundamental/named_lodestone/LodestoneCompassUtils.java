@@ -1,23 +1,23 @@
 package be.ephys.fundamental.named_lodestone;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.WallSignBlock;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.SignTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class LodestoneCompassUtils {
-  public static void setLodestoneName(CompoundNBT nbt, ITextComponent name) {
+  public static void setLodestoneName(CompoundTag nbt, Component name) {
     if (!nbt.contains("display")) {
-      nbt.put("display", new CompoundNBT());
+      nbt.put("display", new CompoundTag());
     }
 
-    CompoundNBT displayNbt = nbt.getCompound("display");
+    CompoundTag displayNbt = nbt.getCompound("display");
 
     // => put NBT hasLodestoneName (bool) & clear it when renamed by anvil instead?
 
@@ -37,15 +37,15 @@ public class LodestoneCompassUtils {
     }
 
     // set lodestone name
-    String serialized = ITextComponent.Serializer.toJson(name);
+    String serialized = Component.Serializer.toJson(name);
     displayNbt.putString("Name", serialized);
 
     nbt.putString("lodestone_name", serialized);
   }
 
-  public static ITextComponent getSignName(World world, BlockPos pos) {
+  public static Component getSignName(Level world, BlockPos pos) {
     for (Direction face : Direction.Plane.HORIZONTAL) {
-      ITextComponent name = getSignNameFromFace(world, pos, face);
+      Component name = getSignNameFromFace(world, pos, face);
       if (name == null) {
         continue;
       }
@@ -56,38 +56,42 @@ public class LodestoneCompassUtils {
     return null;
   }
 
-  private static ITextComponent getSignNameFromFace(World world, BlockPos pos, Direction face) {
-    BlockPos signPos = pos.offset(face);
+  private static Component getSignNameFromFace(Level world, BlockPos pos, Direction face) {
+    BlockPos signPos = pos.relative(face);
     BlockState sign = world.getBlockState(signPos);
 
     if (!(sign.getBlock() instanceof WallSignBlock)) {
       return null;
     }
 
-    Direction facing = sign.get(WallSignBlock.FACING);
+    Direction facing = sign.getValue(WallSignBlock.FACING);
     if (facing != face) {
       return null;
     }
 
-    TileEntity te = world.getTileEntity(signPos);
-    if (!(te instanceof SignTileEntity)) {
+    BlockEntity te = world.getBlockEntity(signPos);
+    if (!(te instanceof SignBlockEntity)) {
       return null;
     }
 
-    SignTileEntity signTe = (SignTileEntity) te;
+    SignBlockEntity signTe = (SignBlockEntity) te;
 
-    IFormattableTextComponent allText = null;
+    TextComponent allText = null;
     for (int line = 0; line < 4; line++) {
-      ITextComponent lineText = signTe.signText[line];
-      if (lineText.getString().equals("")) {
+      Component lineText = signTe.getMessage(line, /* filtered version */ true);
+      TextComponent textComponent = lineText instanceof TextComponent
+        ? (TextComponent) lineText
+        : new TextComponent(lineText.getString());
+
+      if (textComponent.getString().equals("")) {
         continue;
       }
 
       if (allText == null) {
-        allText = lineText.deepCopy(); // .copy
+        allText = (TextComponent) textComponent.copy();
       } else {
-        allText.appendString(" ");
-        allText.append(lineText.deepCopy());
+        allText.append(" ");
+        allText.append(lineText.copy());
       }
     }
 

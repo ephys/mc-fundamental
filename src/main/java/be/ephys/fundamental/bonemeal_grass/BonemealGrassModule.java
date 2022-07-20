@@ -2,14 +2,14 @@ package be.ephys.fundamental.bonemeal_grass;
 
 import be.ephys.cookiecore.config.Config;
 import be.ephys.fundamental.Mod;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.BonemealEvent;
@@ -112,10 +112,10 @@ public class BonemealGrassModule {
   private static class SpreadableMappingEntry {
     public final Block dirtBlock;
     public final Block sourceBlock;
-    public final ITag<Block> sourceTag;
+    public final TagKey<Block> sourceTag;
     public final Block generatedBlock;
 
-    private SpreadableMappingEntry(Block dirtBlock, Block sourceBlock, ITag<Block> sourceTag, Block generatedBlock) {
+    private SpreadableMappingEntry(Block dirtBlock, Block sourceBlock, TagKey<Block> sourceTag, Block generatedBlock) {
       this.dirtBlock = dirtBlock;
       this.sourceBlock = sourceBlock;
       this.sourceTag = sourceTag;
@@ -129,7 +129,7 @@ public class BonemealGrassModule {
 
   private static Map<Block, List<SpreadableMappingEntry>> spreadableMappingCache;
 
-  private static Map<String, ITag<Block>> tagMap = new HashMap<>();
+  private static Map<String, TagKey<Block>> tagMap = new HashMap<>();
 
   private static Map<Block, List<SpreadableMappingEntry>> getSpreadableMapping() {
     if (spreadableMappingCache == null) {
@@ -151,7 +151,7 @@ public class BonemealGrassModule {
         // ==
 
         String spreadableId = parts[1];
-        ITag<Block> spreadableTag = null;
+        TagKey<Block> spreadableTag = null;
         Block spreadableBlock = null;
         if (spreadableId.startsWith("#")) {
           String spreadableTagId = spreadableId.substring(1);
@@ -159,7 +159,7 @@ public class BonemealGrassModule {
           // if we create a tag every time,
           spreadableTag = tagMap.containsKey(spreadableTagId)
             ? tagMap.get(spreadableTagId)
-            : BlockTags.createOptional(new ResourceLocation(spreadableTagId));
+            : BlockTags.create(new ResourceLocation(spreadableTagId));
 
           tagMap.put(spreadableTagId, spreadableTag);
         } else {
@@ -203,19 +203,19 @@ public class BonemealGrassModule {
       return;
     }
 
-    World world = event.getWorld();
+    Level world = event.getWorld();
     BlockPos dirtBlockPos = event.getPos();
     Block resultingBlock = null;
 
     stop:
-    for (BlockPos blockpos : BlockPos.getAllInBoxMutable(dirtBlockPos.add(-1, -1, -1), dirtBlockPos.add(1, 1, 1))) {
+    for (BlockPos blockpos : BlockPos.betweenClosed(dirtBlockPos.offset(-1, -1, -1), dirtBlockPos.offset(1, 1, 1))) {
       BlockState neighborBlock = world.getBlockState(blockpos);
 
       // TODO: should we do a random selection instead of first come?
       for (SpreadableMappingEntry spreadCandidate : spreadCandidates) {
         boolean matches = spreadCandidate.sourceIsTag()
-          ? neighborBlock.isIn(spreadCandidate.sourceTag)
-          : neighborBlock.isIn(spreadCandidate.sourceBlock);
+          ? neighborBlock.is(spreadCandidate.sourceTag)
+          : neighborBlock.is(spreadCandidate.sourceBlock);
 
         if (matches) {
           resultingBlock = spreadCandidate.generatedBlock;
@@ -226,7 +226,7 @@ public class BonemealGrassModule {
     }
 
     if (resultingBlock != null) {
-      world.setBlockState(dirtBlockPos, resultingBlock.getDefaultState(), 3);
+      world.setBlock(dirtBlockPos, resultingBlock.defaultBlockState(), 3);
       event.setResult(Event.Result.ALLOW);
     }
   }

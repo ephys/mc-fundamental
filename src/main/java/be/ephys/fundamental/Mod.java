@@ -2,10 +2,10 @@ package be.ephys.fundamental;
 
 import be.ephys.cookiecore.config.ConfigSynchronizer;
 import be.ephys.fundamental.moss.MossModule;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -28,7 +28,7 @@ public class Mod {
 
   public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
   public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
-  public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MODID);
+  public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MODID);
 
   public Mod() {
     Map<ModConfig.Type, Pair<ConfigSynchronizer.BuiltConfig, ForgeConfigSpec>> configs = ConfigSynchronizer.synchronizeConfig();
@@ -38,7 +38,7 @@ public class Mod {
 
     Mod.BLOCKS.register(modEventBus);
     Mod.ITEMS.register(modEventBus);
-    Mod.TILE_ENTITIES.register(modEventBus);
+    Mod.BLOCK_ENTITIES.register(modEventBus);
 
     ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
     CraftingHelper.register(new ConfigRecipeCondition.Serializer(commonConfig, Mod.id("boolean_config")));

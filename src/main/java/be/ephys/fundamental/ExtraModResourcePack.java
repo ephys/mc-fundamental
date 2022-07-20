@@ -4,10 +4,10 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.minecraft.resources.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.*;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.moddiscovery.ModFile;
+import net.minecraftforge.forgespi.locating.IModFile;
 import org.apache.commons.io.IOUtils;
 
 import java.io.Closeable;
@@ -22,8 +22,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ExtraModResourcePack {
-  public static IResourcePack create(String modId, String pathToPackInJar) {
-    ModFile modFile = ModList.get().getModFileById(modId).getFile();
+  public static PackResources create(String modId, String pathToPackInJar) {
+    IModFile modFile = ModList.get().getModFileById(modId).getFile();
     Path filePath = modFile.getFilePath();
 
     File file = filePath.toFile();
@@ -34,17 +34,17 @@ public class ExtraModResourcePack {
     File containedPack = new File(file, pathToPackInJar);
 
     if (!containedPack.isDirectory()) {
-      return new FilePack(containedPack);
+      return new FilePackResources(containedPack);
     }
 
-    return new FolderPack(containedPack);
+    return new FolderPackResources(containedPack);
   }
 
-  public static Supplier<IResourcePack> createSupplier(String modId, String pathToPackInJar) {
+  public static Supplier<PackResources> createSupplier(String modId, String pathToPackInJar) {
     return () -> create(modId, pathToPackInJar);
   }
 
-  public static class ModFilePack extends ResourcePack {
+  public static class ModFilePack extends AbstractPackResources {
     public static final Splitter PATH_SPLITTER = Splitter.on('/').omitEmptyStrings().limit(3);
     private final String inJarPath;
     private ZipFile zipFile;
@@ -68,7 +68,7 @@ public class ExtraModResourcePack {
       return this.zipFile;
     }
 
-    protected InputStream getInputStream(String resourcePath) throws IOException {
+    protected InputStream getResource(String resourcePath) throws IOException {
       ZipFile zipfile = this.getResourcePackZipFile();
       ZipEntry zipentry = zipfile.getEntry(inJarPath + "/" + resourcePath);
       if (zipentry == null) {
@@ -78,7 +78,7 @@ public class ExtraModResourcePack {
       }
     }
 
-    public boolean resourceExists(String resourcePath) {
+    public boolean hasResource(String resourcePath) {
       try {
         return this.getResourcePackZipFile().getEntry(inJarPath + "/" + resourcePath) != null;
       } catch (IOException ioexception) {
@@ -86,7 +86,7 @@ public class ExtraModResourcePack {
       }
     }
 
-    public Set<String> getResourceNamespaces(ResourcePackType type) {
+    public Set<String> getNamespaces(PackType type) {
       ZipFile zipfile;
       try {
         zipfile = this.getResourcePackZipFile();
@@ -107,20 +107,24 @@ public class ExtraModResourcePack {
 
         s = s.substring(this.inJarPath.length() + 1);
 
-        if (s.startsWith(type.getDirectoryName() + "/")) {
+        if (s.startsWith(type.getDirectory() + "/")) {
           List<String> list = Lists.newArrayList(PATH_SPLITTER.split(s));
           if (list.size() > 1) {
             String s1 = list.get(1);
             if (s1.equals(s1.toLowerCase(Locale.ROOT))) {
               set.add(s1);
             } else {
-              this.onIgnoreNonLowercaseNamespace(s1);
+              this.logWarning(s1);
             }
           }
         }
       }
 
       return set;
+    }
+
+    protected void logWarning(String p_10231_) {
+      Mod.LOGGER.warn("ResourcePack: ignored non-lowercase namespace: {} in {}", p_10231_, this.file);
     }
 
     protected void finalize() throws Throwable {
@@ -136,7 +140,7 @@ public class ExtraModResourcePack {
 
     }
 
-    public Collection<ResourceLocation> getAllResourceLocations(ResourcePackType type, String namespaceIn, String pathIn, int maxDepthIn, Predicate<String> filterIn) {
+    public Collection<ResourceLocation> getResources(PackType type, String namespaceIn, String pathIn, int maxDepthIn, Predicate<String> filterIn) {
       ZipFile zipfile;
       try {
         zipfile = this.getResourcePackZipFile();
@@ -147,7 +151,7 @@ public class ExtraModResourcePack {
       Enumeration<? extends ZipEntry> enumeration = zipfile.entries();
       List<ResourceLocation> list = Lists.newArrayList();
       // <assets|data>/<models>/...
-      String s = this.inJarPath + "/" + type.getDirectoryName() + "/" + namespaceIn + "/";
+      String s = this.inJarPath + "/" + type.getDirectory() + "/" + namespaceIn + "/";
       String s1 = s + pathIn + "/";
 
       while(enumeration.hasMoreElements()) {

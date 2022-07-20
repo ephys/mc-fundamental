@@ -1,22 +1,26 @@
 package be.ephys.fundamental.slime_on_piston;
 
 import be.ephys.cookiecore.config.Config;
-import be.ephys.fundamental.helpers.BlockHelper;
-import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.properties.PistonType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,8 +40,8 @@ public class SlimeOnPistonModule {
   @Config.BooleanDefault(true)
   public static ForgeConfigSpec.BooleanValue removeSlimeEnabled;
 
-  public static final Tags.IOptionalNamedTag<Item> slimeballsTag = ItemTags.createOptional(new ResourceLocation("forge", "slimeballs"));
-  public static final Tags.IOptionalNamedTag<Item> axesTag = ItemTags.createOptional(new ResourceLocation("forge", "tools/axes"));
+  public static final TagKey<Item> slimeballsTag = ItemTags.create(new ResourceLocation("forge", "slimeballs"));
+  public static final TagKey<Item> axesTag = ItemTags.create(new ResourceLocation("forge", "tools/axes"));
 
   @SubscribeEvent
   public static void onCommonSetup(FMLCommonSetupEvent event) {
@@ -52,104 +56,104 @@ public class SlimeOnPistonModule {
 
   public static void slimeThatPiston(PlayerInteractEvent.RightClickBlock event) {
     ItemStack usedItemStack = event.getItemStack();
-    if (!usedItemStack.getItem().isIn(slimeballsTag)) {
+    if (!usedItemStack.is(slimeballsTag)) {
       return;
     }
 
-    World world = event.getWorld();
+    Level world = event.getWorld();
     BlockPos pos = event.getPos();
     BlockState targetedBlockState = world.getBlockState(pos);
 
-    if (!(targetedBlockState.getBlock() == Blocks.PISTON && !targetedBlockState.get(PistonBlock.EXTENDED))
-      && !(targetedBlockState.getBlock() == Blocks.PISTON_HEAD && targetedBlockState.get(PistonHeadBlock.TYPE) == PistonType.DEFAULT)) {
+    if (!(targetedBlockState.getBlock() == Blocks.PISTON && !targetedBlockState.getValue(PistonBaseBlock.EXTENDED))
+      && !(targetedBlockState.getBlock() == Blocks.PISTON_HEAD && targetedBlockState.getValue(PistonHeadBlock.TYPE) == PistonType.DEFAULT)) {
       return;
     }
 
-    Direction blockFace = targetedBlockState.get(DirectionalBlock.FACING);
+    Direction blockFace = targetedBlockState.getValue(DirectionalBlock.FACING);
     if (event.getFace() != blockFace) {
       return;
     }
 
-    if (!world.isRemote) {
+    if (!world.isClientSide()) {
       // turn into sticky piston
       if (targetedBlockState.getBlock() == Blocks.PISTON) {
-        BlockState newBlockState = BlockHelper.assignBlockState(Blocks.STICKY_PISTON.getDefaultState(), targetedBlockState);
+        BlockState newBlockState = Blocks.STICKY_PISTON.withPropertiesOf(targetedBlockState);
 
-        world.setBlockState(pos, newBlockState);
+        world.setBlockAndUpdate(pos, newBlockState);
       } else {
-        BlockState newBlockState = targetedBlockState.with(PistonHeadBlock.TYPE, PistonType.STICKY);
+        BlockState newBlockState = targetedBlockState.setValue(PistonHeadBlock.TYPE, PistonType.STICKY);
 
-        BlockPos pistonBasePos = pos.offset(blockFace.getOpposite());
+        BlockPos pistonBasePos = pos.relative(blockFace.getOpposite());
         BlockState pistonBaseBlockState = world.getBlockState(pistonBasePos);
 
-        BlockState newBaseBlockState = BlockHelper.assignBlockState(Blocks.STICKY_PISTON.getDefaultState(), pistonBaseBlockState);
+        BlockState newBaseBlockState = Blocks.STICKY_PISTON.withPropertiesOf(pistonBaseBlockState);
 
-        world.setBlockState(pos, newBlockState);
-        world.setBlockState(pistonBasePos, newBaseBlockState);
+        world.setBlockAndUpdate(pos, newBlockState);
+        world.setBlockAndUpdate(pistonBasePos, newBaseBlockState);
       }
 
-      PlayerEntity player = event.getPlayer();
-      if (!player.abilities.isCreativeMode) {
+      Player player = event.getPlayer();
+      if (!player.getAbilities().instabuild) {
         usedItemStack.shrink(1);
       }
     }
 
-    world.playSound(event.getPlayer(), pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, 1f, 1f);
+    world.playSound(event.getPlayer(), pos.getX(), pos.getY(), pos.getZ(), SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
 
     event.setCanceled(true);
-    event.setCancellationResult(world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME);
+    event.setCancellationResult(world.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
   }
 
   public static void axeThatPiston(PlayerInteractEvent.RightClickBlock event) {
     ItemStack usedItemStack = event.getItemStack();
-    if (!usedItemStack.getItem().isIn(axesTag)) {
+    if (!usedItemStack.is(axesTag)) {
       return;
     }
 
-    World world = event.getWorld();
+    Level world = event.getWorld();
     BlockPos pos = event.getPos();
     BlockState targetedBlockState = world.getBlockState(pos);
 
-    if (!(targetedBlockState.getBlock() == Blocks.STICKY_PISTON && !targetedBlockState.get(PistonBlock.EXTENDED))
-      && !(targetedBlockState.getBlock() == Blocks.PISTON_HEAD && targetedBlockState.get(PistonHeadBlock.TYPE) == PistonType.STICKY)) {
+    if (!(targetedBlockState.getBlock() == Blocks.STICKY_PISTON && !targetedBlockState.getValue(PistonBaseBlock.EXTENDED))
+      && !(targetedBlockState.getBlock() == Blocks.PISTON_HEAD && targetedBlockState.getValue(PistonHeadBlock.TYPE) == PistonType.STICKY)) {
       return;
     }
 
-    Direction blockFace = targetedBlockState.get(DirectionalBlock.FACING);
+    Direction blockFace = targetedBlockState.getValue(DirectionalBlock.FACING);
     if (event.getFace() != blockFace) {
       return;
     }
 
-    PlayerEntity player = event.getPlayer();
+    Player player = event.getPlayer();
 
-    if (!world.isRemote) {
+    if (!world.isClientSide()) {
       // turn into sticky piston
       if (targetedBlockState.getBlock() == Blocks.STICKY_PISTON) {
-        BlockState newBlockState = BlockHelper.assignBlockState(Blocks.PISTON.getDefaultState(), targetedBlockState);
+        BlockState newBlockState = Blocks.PISTON.withPropertiesOf(targetedBlockState);
 
-        world.setBlockState(pos, newBlockState);
+        world.setBlockAndUpdate(pos, newBlockState);
       } else {
-        BlockState newBlockState = targetedBlockState.with(PistonHeadBlock.TYPE, PistonType.DEFAULT);
+        BlockState newBlockState = targetedBlockState.setValue(PistonHeadBlock.TYPE, PistonType.DEFAULT);
 
-        BlockPos pistonBasePos = pos.offset(blockFace.getOpposite());
+        BlockPos pistonBasePos = pos.relative(blockFace.getOpposite());
         BlockState pistonBaseBlockState = world.getBlockState(pistonBasePos);
 
-        BlockState newBaseBlockState = BlockHelper.assignBlockState(Blocks.PISTON.getDefaultState(), pistonBaseBlockState);
+        BlockState newBaseBlockState = Blocks.PISTON.withPropertiesOf(pistonBaseBlockState);
 
-        world.setBlockState(pos, newBlockState);
-        world.setBlockState(pistonBasePos, newBaseBlockState);
+        world.setBlockAndUpdate(pos, newBlockState);
+        world.setBlockAndUpdate(pistonBasePos, newBaseBlockState);
       }
 
-      if (!player.abilities.isCreativeMode) {
-        usedItemStack.damageItem(1, player, (p_220043_1_) -> {
-          p_220043_1_.sendBreakAnimation(event.getHand());
+      if (!player.getAbilities().instabuild) {
+        usedItemStack.hurtAndBreak(1, player, (p) -> {
+          p.broadcastBreakEvent(event.getHand());
         });
       }
     }
 
-    world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_SLIME_BLOCK_BREAK, SoundCategory.BLOCKS, 1f, 1f);
+    world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.SLIME_BLOCK_BREAK, SoundSource.BLOCKS, 1f, 1f);
 
     event.setCanceled(true);
-    event.setCancellationResult(world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME);
+    event.setCancellationResult(world.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
   }
 }

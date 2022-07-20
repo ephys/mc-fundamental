@@ -2,20 +2,20 @@ package be.ephys.fundamental.named_lodestone;
 
 import be.ephys.cookiecore.config.Config;
 import be.ephys.fundamental.bound_lodestone.BoundLodestoneModule;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.WallSignBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -54,7 +54,7 @@ public class NamedLodeStoneModule {
       return;
     }
 
-    World world = event.getWorld();
+    Level world = event.getWorld();
     BlockPos signPos = event.getPos();
     BlockState clickedSign = world.getBlockState(signPos);
 
@@ -66,35 +66,35 @@ public class NamedLodeStoneModule {
       return;
     }
 
-    Direction signDirection = clickedSign.get(WallSignBlock.FACING);
-    BlockPos lodestonePos = signPos.offset(signDirection.getOpposite());
+    Direction signDirection = clickedSign.getValue(WallSignBlock.FACING);
+    BlockPos lodestonePos = signPos.relative(signDirection.getOpposite());
     BlockState attachedLodestone = world.getBlockState(lodestonePos);
 
-    if (!attachedLodestone.isIn(Blocks.LODESTONE)
-      && !attachedLodestone.isIn(BoundLodestoneModule.BOUND_LODESTONE.get())) {
+    if (!attachedLodestone.is(Blocks.LODESTONE)
+      && !attachedLodestone.is(BoundLodestoneModule.BOUND_LODESTONE.get())) {
       return;
     }
 
     rightClick(world, lodestonePos, event.getPlayer(), itemStack, event.getHand(), signDirection);
-    event.setCancellationResult(ActionResultType.SUCCESS);
+    event.setCancellationResult(InteractionResult.SUCCESS);
   }
 
-  private static void rightClick(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack, Hand hand, Direction facingOpposite) {
-    if (hand != Hand.MAIN_HAND) {
+  private static void rightClick(Level world, BlockPos pos, Player player, ItemStack itemStack, InteractionHand hand, Direction facingOpposite) {
+    if (hand != InteractionHand.MAIN_HAND) {
       return;
     }
 
     BlockState attachedState = world.getBlockState(pos);
 
-    BlockState stateDown = world.getBlockState(pos.down());
-    BlockRayTraceResult rayTrace = new BlockRayTraceResult(new Vector3d(pos.getX(), pos.getY(), pos.getZ()), facingOpposite, pos, false);
-    ActionResultType result = itemStack.getItem().onItemUse(new ItemUseContext(player, hand, rayTrace));
+    BlockState stateDown = world.getBlockState(pos.below());
+    BlockHitResult rayTrace = new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), facingOpposite, pos, false);
+    InteractionResult result = itemStack.getItem().useOn(new UseOnContext(player, hand, rayTrace));
 
-    if (result == ActionResultType.PASS) {
-      if (!world.isAirBlock(pos.down()) && attachedState.getBlock().isAir(attachedState, world, pos)) {
-        stateDown.getBlock().onBlockActivated(attachedState, world, pos.down(), player, hand, rayTrace);
-      } else if (!attachedState.getBlock().isAir(attachedState, world, pos)) {
-        attachedState.getBlock().onBlockActivated(attachedState, world, pos, player, hand, rayTrace);
+    if (result == InteractionResult.PASS) {
+      if (!world.isEmptyBlock(pos.below()) && attachedState.isAir()) {
+        stateDown.use(world, player, hand, rayTrace);
+      } else if (!attachedState.isAir()) {
+        attachedState.use(world, player, hand, rayTrace);
       }
     }
   }
