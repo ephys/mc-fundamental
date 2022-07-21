@@ -88,11 +88,11 @@ public class MossModule {
 
     resourcePackInfoConsumer.accept(factory.create(
       MOSSY_COBBLESTONE_PACK_ID,
-      new TranslatableComponent("fundamental.pack.mossy_cobblestone.description"),
+      new TranslatableComponent("fundamental.pack.mossy_cobblestone.title"),
       /* always enabled */ false,
       mossyCobblestonePackSupplier,
       new PackMetadataSection(
-        new TranslatableComponent("fundamental.pack.mossy_cobblestone.description"),
+        new TranslatableComponent("fundamental.pack.controlled"),
         6),
       Pack.Position.TOP,
       PackSource.BUILT_IN,
@@ -106,11 +106,11 @@ public class MossModule {
 
     resourcePackInfoConsumer.accept(factory.create(
       MOSSY_STONE_BRICK_PACK_ID,
-      new TranslatableComponent("fundamental.pack.mossy_stone_bricks.description"),
+      new TranslatableComponent("fundamental.pack.mossy_stone_bricks.title"),
       /* always enabled */ false,
       mossyStoneBricksPackSupplier,
       new PackMetadataSection(
-        new TranslatableComponent("fundamental.pack.mossy_stone_bricks.description"),
+        new TranslatableComponent("fundamental.pack.controlled"),
         6),
       Pack.Position.TOP,
       PackSource.BUILT_IN,
