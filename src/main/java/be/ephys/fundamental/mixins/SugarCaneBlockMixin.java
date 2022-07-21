@@ -1,6 +1,6 @@
 package be.ephys.fundamental.mixins;
 
-import be.ephys.fundamental.slime_on_piston.PlantHeightModule;
+import be.ephys.fundamental.plant_height.PlantHeightModule;
 import be.ephys.fundamental.utils.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

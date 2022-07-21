@@ -1,4 +1,4 @@
-package be.ephys.fundamental.slime_on_piston;
+package be.ephys.fundamental.plant_height;
 
 import be.ephys.cookiecore.config.Config;
 import net.minecraftforge.common.ForgeConfigSpec;
