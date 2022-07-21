@@ -3,7 +3,7 @@
   "group": "crafting_table",
   "ingredients": [
     {
-      "tag": "forge:workbenches"
+      "tag": "forge:crafting_tables"
     }
   ],
   "result": {
