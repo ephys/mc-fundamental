@@ -4,36 +4,7 @@
 
 Features can be turned off through the configuration file.
 
-**Named Lodestone Compass**
-
-![A lodestone named using a sign](docs/screenshots/named-lodestone.png)
-
-You can name your lodestones by placing a sign on them
-
-Binding your compass to the lodestone will automatically name it 
-using the text from the sign, instead of "Lodestone Compass".
-
-*Bonus*: Right clicking the sign instead of the Lodestone will also work.
-
-**Crafting Tables**
-
-![Crafting tables in all variants of vanilla wood](docs/screenshots/crafting-tables.png)
-
-Enjoy our large selection of crafting tables, now available in all vanilla colors.
-
-*Tip*: custom crafting tables can be crafting into regular crafting tables. Mainly as a workaround for recipes that demand a vanilla table.
-
-**Slime on piston**
-
-![Placing slime on a piston](docs/screenshots/slime-on-piston.png)
-
-You can place slime on a piston by right-clicking slime on a piston face.
-
-![Placing slime on a piston](docs/screenshots/slime-off-piston.png)
-
-You can also use an axe to scrape that slime off. (You don't get the slimeball back).
-
-**Bonemeal Spreads Grass**
+### Bonemeal Spreads Grass
 
 ![Player using bonemeal on dirt to spread grass](docs/screenshots/bonemeal-grass.apng)
 
@@ -42,15 +13,44 @@ Like with Nylium, you can use bonemeal on dirt that is neighboring grass to spre
 Built in support for Quark, Botania, Tinker's Construct, and Biomes You'll Go.  
 Extra support can be added through the configuration file. PRs are also welcome.
 
-**Grass Item respects biome color**
+### Named Lodestone Compass
 
-![A grass block item in a swamp biome](docs/screenshots/grass-color-swamp.png)
+![A lodestone named using a sign](docs/screenshots/named-lodestone.jpg)
 
-![A grass block item in a dark forest biome](docs/screenshots/grass-color-dark-forest.png)
+You can name your lodestones by placing a sign on them
 
-**Mossy stones follow biome colors**
+Binding your compass to the lodestone will automatically name it 
+using the text from the sign, instead of "Lodestone Compass".
 
-![Mossy cobblestone in a spruce taiga](docs/screenshots/mossy_cobblestone/spruce_taiga.png)
+*Bonus*: Right clicking the sign instead of the Lodestone will also work.
+
+### Crafting Tables
+
+![Crafting tables in all variants of vanilla wood](docs/screenshots/crafting-tables.jpg)
+
+Enjoy our large selection of crafting tables, now available in all vanilla colors.
+
+*Tip*: custom crafting tables can be crafting into regular crafting tables. Mainly as a workaround for recipes that demand a vanilla table.
+
+### Slime on piston
+
+![Placing slime on a piston](docs/screenshots/slime-on-piston.png)
+
+You can place slime on a piston by right-clicking slime on a piston face.
+
+![Removing slime from a piston](docs/screenshots/slime-off-piston.png)
+
+You can also use an axe to scrape that slime off. (You don't get the slimeball back).
+
+### Grass Item respects biome color
+
+![A grass block item in a swamp biome](docs/screenshots/grass-color-swamp.jpg)
+
+![A grass block item in a dark forest biome](docs/screenshots/grass-color-dark-forest.jpg)
+
+### Mossy stones follow biome colors
+
+![Mossy cobblestone in a spruce taiga](docs/screenshots/mossy_cobblestone/spruce_taiga.jpg)
 
 [View gallery](docs/screenshots/mossy_cobblestone)
 
@@ -58,9 +58,25 @@ Also available for Mossy stone bricks.
 
 If you make a ressource pack that improves the moss overlay, send it our way!
 
-**Bound Lodestone**
+### Randomized plant height
 
-![A villager upgrading your lodestone](docs/screenshots/bound-lodestone.png)
+![Cacti with random height](docs/screenshots/cactus-height.jpg)
+
+![Sugar Canes with random height](docs/screenshots/sugarcane-height.jpg)
+
+![Vines stop growing](docs/screenshots/vine-height-1.jpg)
+
+No more plant uniformity after staying in an area for too long. Cacti, sugar canes, and vine will stop growing at different
+heights to give them a more natural feeling.
+
+Very noticeable on vines. Unlike in vanilla, they will not grow forever.
+
+Unlike newer vanilla plants, growth height is based on the plant's coordinates. This means the same coordinates will always result
+in the same plant height, but it removes the need for an extra block state for these blocks.
+
+### Bound Lodestone
+
+![A villager upgrading your lodestone](docs/screenshots/bound-lodestone.jpg)
 
 The Bound Lodestone acts like a Lodestone, but is attuned to another lodestone in the world.
 
