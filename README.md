@@ -22,7 +22,7 @@ You can name your lodestones by placing a sign on them
 Binding your compass to the lodestone will automatically name it 
 using the text from the sign, instead of "Lodestone Compass".
 
-*Bonus*: Right clicking the sign instead of the Lodestone will also work.
+*Bonus*: Right-clicking the sign instead of the Lodestone will also work.
 
 ### Crafting Tables
 
@@ -30,7 +30,7 @@ using the text from the sign, instead of "Lodestone Compass".
 
 Enjoy our large selection of crafting tables, now available in all vanilla colors.
 
-*Tip*: custom crafting tables can be crafting into regular crafting tables. Mainly as a workaround for recipes that demand a vanilla table.
+*Tip*: custom crafting tables can be crafted into regular crafting tables. Mainly as a workaround for recipes that demand a vanilla table.
 
 ### Slime on piston
 
@@ -54,7 +54,7 @@ You can also use an axe to scrape that slime off. (You don't get the slimeball b
 
 [View gallery](docs/screenshots/mossy_cobblestone)
 
-Also available for Mossy stone bricks.
+This behavior is also available for Mossy stone bricks.
 
 If you make a ressource pack that improves the moss overlay, send it our way!
 
@@ -85,7 +85,7 @@ Use a Lodestone Compass on an unbound Lodestone to attune it to the same coordin
 Once a Bound Lodestone has been attuned,
 use a regular Compass on the Bound Lodestone to attune it to Lodestone that the Bound Lodestone is attuned to.
 
-*tl;dr* it's a lodestone proxy
+*TL;DR* it's a lodestone proxy
 
 You can get it from your local Cartographer
 
