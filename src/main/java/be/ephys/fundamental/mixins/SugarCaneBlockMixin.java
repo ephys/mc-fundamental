@@ -37,7 +37,7 @@ public class SugarCaneBlockMixin {
     }
 
     Random random2 = new Random(pos.asLong());
-    int maxHeight = MathUtils.randomIntInclusive(random2, PlantHeightModule.sugarCaneMin.get(), PlantHeightModule.sugarCaneMax.get());
+    int maxHeight = MathUtils.randomIntInclusive(random2, PlantHeightModule.sugarCaneMinHeight.get(), PlantHeightModule.sugarCaneMaxHeight.get());
 
     if (i < maxHeight) {
       int j = state.getValue(SugarCaneBlock.AGE);

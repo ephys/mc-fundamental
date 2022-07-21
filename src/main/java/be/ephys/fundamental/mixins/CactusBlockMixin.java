@@ -35,7 +35,7 @@ public class CactusBlockMixin {
     }
 
     Random random2 = new Random(pos.asLong());
-    int maxHeight = MathUtils.randomIntInclusive(random2, PlantHeightModule.cactusMin.get(), PlantHeightModule.cactusMax.get());
+    int maxHeight = MathUtils.randomIntInclusive(random2, PlantHeightModule.cactusMinHeight.get(), PlantHeightModule.cactusMaxHeight.get());
 
     if (i < maxHeight) {
       int j = state.getValue(CactusBlock.AGE);
