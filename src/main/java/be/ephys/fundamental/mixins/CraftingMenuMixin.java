@@ -28,7 +28,7 @@ public class CraftingMenuMixin {
       return;
     }
 
-    cir.setReturnValue(isWithinUsableDistance(this.access, playerIn, CraftingTableModule.CRAFTING_TABLE_TAG_WRAPPER));
+    cir.setReturnValue(isWithinUsableDistance(this.access, playerIn, CraftingTableModule.CRAFTING_TABLE_TAG));
   }
 
   private static boolean isWithinUsableDistance(ContainerLevelAccess worldPos, Player playerIn, TagKey<Block> targetTag) {

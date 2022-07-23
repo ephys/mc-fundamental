@@ -22,8 +22,7 @@ public class CraftingTableModule {
   @Config.BooleanDefault(true)
   public static ForgeConfigSpec.BooleanValue enabled; // read by JSON recipes
 
-  public static final ResourceLocation CRAFTING_TABLE_TAG = new ResourceLocation("forge", "workbenches");
-  public static final TagKey<Block> CRAFTING_TABLE_TAG_WRAPPER = BlockTags.create(CRAFTING_TABLE_TAG);
+  public static final TagKey<Block> CRAFTING_TABLE_TAG = BlockTags.create(new ResourceLocation("forge", "crafting_tables"));
 
   private static final Item.Properties CraftingTableItemProperties = new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS);
 
