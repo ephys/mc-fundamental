@@ -1,4 +1,4 @@
-package be.ephys.fundamental.bonemeal_grass;
+package be.ephys.fundamental.bonemeal;
 
 import be.ephys.cookiecore.config.Config;
 import be.ephys.fundamental.Mod;
@@ -15,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -23,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(
-  modid = be.ephys.fundamental.Mod.MODID,
-  bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+@EventBusSubscriber(
+  modid = Mod.MODID,
+  bus = EventBusSubscriber.Bus.MOD
 )
 public class BonemealGrassModule {
   @Config(
