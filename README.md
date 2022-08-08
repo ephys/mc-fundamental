@@ -74,6 +74,10 @@ Very noticeable on vines. Unlike in vanilla, they will not grow forever.
 Unlike newer vanilla plants, growth height is based on the plant's coordinates. This means the same coordinates will always result
 in the same plant height, but it removes the need for an extra block state for these blocks.
 
+### Lightning Strikes turn Guardians into Elder Guardians
+
+![Lightning strikes a guardian](docs/screenshots/elder-guardian.jpg)
+
 ### Bound Lodestone
 
 ![A villager upgrading your lodestone](docs/screenshots/bound-lodestone.jpg)
