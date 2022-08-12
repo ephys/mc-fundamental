@@ -29,6 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,8 @@ public class MossModule {
   public static final String MOSSY_COBBLESTONE_PACK_ID = "fundamental:mossy_cobblestone";
   public static final String MOSSY_STONE_BRICK_PACK_ID = "fundamental:mossy_stone_bricks";
 
-  public static void init() {
+  @SubscribeEvent
+  public static void init(FMLConstructModEvent event) {
     PackRepository resourcePackList = Minecraft.getInstance().getResourcePackRepository();
     resourcePackList.addPackFinder(MossModule::addPack);
   }

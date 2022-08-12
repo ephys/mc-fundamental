@@ -1,7 +1,17 @@
 package be.ephys.fundamental.plant_height;
 
 import be.ephys.cookiecore.config.Config;
+import be.ephys.fundamental.utils.MathUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeHooks;
+
+import java.util.Random;
 
 public class PlantHeightModule {
   @Config(
@@ -80,4 +90,53 @@ public class PlantHeightModule {
   )
   @Config.IntDefault(2)
   public static ForgeConfigSpec.IntValue vineMaxFloorDistance;
+
+  public static boolean growCactusOrSugarCane(BlockState blockState, Level level, BlockPos pos, Random random, boolean usingBonemeal) {
+    BlockPos up = pos.above();
+    if (!level.isEmptyBlock(up)) {
+      return false;
+    }
+
+    Block block = blockState.getBlock();
+    int minHeight = block == Blocks.CACTUS
+      ? cactusEnabled.get() ? cactusMinHeight.get() : 3
+      : sugarCaneEnabled.get() ? sugarCaneMinHeight.get() : 3;
+    int maxHeight = block == Blocks.CACTUS
+      ? cactusEnabled.get() ? cactusMaxHeight.get() : 3
+      : sugarCaneEnabled.get() ? sugarCaneMaxHeight.get() : 3;
+
+    int i;
+    for (i = 1; level.getBlockState(pos.below(i)).is(block); ++i) {
+    }
+
+    Random posBasedRandom = new Random(pos.asLong());
+    int maxHeightForPos = MathUtils.randomIntInclusive(posBasedRandom, minHeight, maxHeight);
+
+    if (i >= maxHeightForPos) {
+      return false;
+    }
+
+    int currentAge = blockState.getValue(BlockStateProperties.AGE_15);
+    if (!ForgeHooks.onCropsGrowPre(level, up, blockState, true)) {
+      return false;
+    }
+
+    if (!level.isClientSide()) {
+      int ageBoost = usingBonemeal ? random.nextInt(1, 15) : 1;
+      int newAge = currentAge + ageBoost;
+
+      if (newAge > 15) {
+        level.setBlockAndUpdate(up, block.defaultBlockState());
+        BlockState blockstate = blockState.setValue(BlockStateProperties.AGE_15, 0);
+        level.setBlock(pos, blockstate, 4);
+        blockstate.neighborChanged(level, up, block, pos, false);
+      } else {
+        level.setBlock(pos, blockState.setValue(BlockStateProperties.AGE_15, newAge), 4);
+      }
+    }
+
+    ForgeHooks.onCropsGrowPost(level, pos, blockState);
+
+    return true;
+  }
 }

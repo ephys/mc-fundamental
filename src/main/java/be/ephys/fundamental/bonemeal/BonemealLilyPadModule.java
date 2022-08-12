@@ -1,10 +1,12 @@
 package be.ephys.fundamental.bonemeal;
 
+import be.ephys.cookiecore.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -18,18 +20,27 @@ import java.util.Random;
   modid = be.ephys.fundamental.Mod.MODID,
   bus = Mod.EventBusSubscriber.Bus.MOD
 )
-public class BonemealModule {
+public class BonemealLilyPadModule {
   private static final Random random = new Random();
+
+  @Config(
+    name = "bonemeal.lilyPad",
+    description = "Spawn a new lily pads nearby by using bone meal on one."
+  )
+  @Config.BooleanDefault(true)
+  public static ForgeConfigSpec.BooleanValue enabled;
 
   @SubscribeEvent
   public static void onCommonSetup(FMLCommonSetupEvent t) {
-    MinecraftForge.EVENT_BUS.addListener(BonemealModule::onBoneMealUse);
+    if (enabled.get()) {
+      MinecraftForge.EVENT_BUS.addListener(BonemealLilyPadModule::onBoneMealUse);
+    }
   }
 
   public static void onBoneMealUse(BonemealEvent event) {
-    BlockState dirtBlock = event.getBlock();
+    BlockState targetBlockState = event.getBlock();
 
-    if (!dirtBlock.is(Blocks.LILY_PAD)) {
+    if (!targetBlockState.is(Blocks.LILY_PAD)) {
       return;
     }
 

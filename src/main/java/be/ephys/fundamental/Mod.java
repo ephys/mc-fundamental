@@ -1,17 +1,14 @@
 package be.ephys.fundamental;
 
 import be.ephys.cookiecore.config.ConfigSynchronizer;
-import be.ephys.fundamental.moss.MossModule;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -48,8 +45,6 @@ public class Mod {
 
     ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
     CraftingHelper.register(new ConfigRecipeCondition.Serializer(commonConfig, Mod.id("boolean_config")));
-
-    DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> MossModule::init);
   }
 
   public static ResourceLocation id(String resourceId) {

@@ -13,6 +13,14 @@ Like with Nylium, you can use bonemeal on dirt that is neighboring grass to spre
 Built in support for Quark, Botania, Tinker's Construct, and Biomes You'll Go.  
 Extra support can be added through the configuration file. PRs are also welcome.
 
+### Bonemeal grows cactus, sugar cane & spreads lily pads
+
+![Player using bonemeal on cactus to grow cactus](docs/screenshots/bonemeal_cactus.jpg)
+
+![Player using bonemeal on sugar cane to grow sugar cane](docs/screenshots/bonemeal_sugar_cane.jpg)
+
+![Player using bonemeal on lily pad to grow lily pad](docs/screenshots/bonemeal_lily_pad.jpg)
+
 ### Named Lodestone Compass
 
 ![A lodestone named using a sign](docs/screenshots/named-lodestone.jpg)

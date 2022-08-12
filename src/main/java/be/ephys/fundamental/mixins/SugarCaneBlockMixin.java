@@ -1,7 +1,6 @@
 package be.ephys.fundamental.mixins;
 
 import be.ephys.fundamental.plant_height.PlantHeightModule;
-import be.ephys.fundamental.utils.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.SugarCaneBlock;
@@ -25,30 +24,6 @@ public class SugarCaneBlockMixin {
 
     callbackInfo.cancel();
 
-    BlockPos up = pos.above();
-    if (!worldIn.isEmptyBlock(up)) {
-      return;
-    }
-
-    SugarCaneBlock self = (SugarCaneBlock) (Object) this;
-
-    int i;
-    for(i = 1; worldIn.getBlockState(pos.below(i)).is(self); ++i) {
-    }
-
-    Random random2 = new Random(pos.asLong());
-    int maxHeight = MathUtils.randomIntInclusive(random2, PlantHeightModule.sugarCaneMinHeight.get(), PlantHeightModule.sugarCaneMaxHeight.get());
-
-    if (i < maxHeight) {
-      int j = state.getValue(SugarCaneBlock.AGE);
-      if (net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, true)) {
-        if (j == 15) {
-          worldIn.setBlockAndUpdate(up, self.defaultBlockState());
-          worldIn.setBlock(pos, state.setValue(SugarCaneBlock.AGE, 0), 4);
-        } else {
-          worldIn.setBlock(pos, state.setValue(SugarCaneBlock.AGE, j + 1), 4);
-        }
-      }
-    }
+    PlantHeightModule.growCactusOrSugarCane(state, worldIn, pos, random, false);
   }
 }
