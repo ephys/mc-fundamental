@@ -82,9 +82,26 @@ Very noticeable on vines. Unlike in vanilla, they will not grow forever.
 Unlike newer vanilla plants, growth height is based on the plant's coordinates. This means the same coordinates will always result
 in the same plant height, but it removes the need for an extra block state for these blocks.
 
-### Lightning Strikes turn Guardians into Elder Guardians
+### Renewable Elder Guardians
 
 ![Lightning strikes a guardian](docs/screenshots/elder-guardian.jpg)
+
+Lightning Strikes turn Guardians into Elder Guardians, making sponges renewable.
+
+### Banner pattern limit
+
+Vanilla Minecraft limits banner to 6 pattern layers. This mod bumps that limit to 16 (the same as command blocks), 
+but any value between 1 and 16 can be used.
+
+### Changes to beds
+
+![A user trying to sleep in a bed that is too far away](docs/screenshots/bed_too_far.jpg)
+
+This mod changes the message "You may not rest now, the bed is too far away" to "This bed is too far away" because
+the first part of the message prevents you from understanding what is happening at a glance.
+
+There is also an option, off by default, to remove the restriction altogether.
+Allowing the player to sleep in the bed as long as the bed is reachable.
 
 ### Bound Lodestone
 
