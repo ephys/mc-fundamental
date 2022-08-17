@@ -10,8 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class LoomMenuMixin {
   @ModifyConstant(
     method = "slotsChanged",
-    constant = @Constant(intValue = 6, ordinal = 0, log = true),
-    require = 1
+    constant = @Constant(intValue = 6, ordinal = 0)
   )
   private int slotsChanged$bannerLayerLimit(int constant) {
     return BannerLayerLimitBreaker.layerLimit.get();
