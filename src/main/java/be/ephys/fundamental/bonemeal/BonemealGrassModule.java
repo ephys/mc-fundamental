@@ -43,6 +43,17 @@ public class BonemealGrassModule {
 
     "minecraft:dirt #fundamental:grass_blocks minecraft:grass_block",
     "minecraft:dirt #fundamental:myceliums minecraft:mycelium",
+    "minecraft:cobblestone #fundamental:mosses minecraft:mossy_cobblestone",
+    "minecraft:cobblestone_wall #fundamental:mosses minecraft:mossy_cobblestone_wall",
+    "minecraft:cobblestone_slab #fundamental:mosses minecraft:mossy_cobblestone_slab",
+    "minecraft:cobblestone_stairs #fundamental:mosses minecraft:mossy_cobblestone_stairs",
+
+    "minecraft:stone_bricks #fundamental:mosses minecraft:mossy_stone_bricks",
+    "minecraft:stone_brick_slab #fundamental:mosses minecraft:mossy_stone_brick_slab",
+    "minecraft:stone_brick_stairs #fundamental:mosses minecraft:mossy_stone_brick_stairs",
+    "minecraft:stone_brick_wall #fundamental:mosses minecraft:mossy_stone_brick_wall",
+
+    "minecraft:infested_stone_bricks #fundamental:mosses minecraft:infested_mossy_stone_bricks",
 
     // byg
 
@@ -72,6 +83,13 @@ public class BonemealGrassModule {
     "minecraft:dirt botania:infused_grass botania:infused_grass",
     "minecraft:dirt botania:mutated_grass botania:mutated_grass",
     "minecraft:dirt quark:glowcelium quark:glowcelium",
+    "quark:cobblestone_bricks #fundamental:mosses quark:mossy_cobblestone_bricks",
+    "quark:cobblestone_bricks_slab #fundamental:mosses quark:mossy_cobblestone_bricks_slab",
+    "quark:cobblestone_bricks_stairs #fundamental:mosses quark:mossy_cobblestone_bricks_stairs",
+    "quark:cobblestone_bricks_wall #fundamental:mosses quark:mossy_cobblestone_bricks_wall",
+    "quark:cobblestone_vertical_slab #fundamental:mosses quark:mossy_cobblestone_vertical_slab",
+    "quark:stone_brick_vertical_slab #fundamental:mosses quark:mossy_stone_brick_vertical_slab",
+    "quark:cobblestone_bricks_vertical_slab #fundamental:mosses quark:mossy_cobblestone_bricks_vertical_slab",
 
     // tinker's
 
@@ -195,10 +213,10 @@ public class BonemealGrassModule {
   }
 
   public static void onBoneMealUse(BonemealEvent event) {
-    BlockState dirtBlock = event.getBlock();
+    BlockState sourceBlock = event.getBlock();
 
     Map<Block, List<SpreadableMappingEntry>> dirtToGrassMapping = getSpreadableMapping();
-    List<SpreadableMappingEntry> spreadCandidates = dirtToGrassMapping.get(dirtBlock.getBlock());
+    List<SpreadableMappingEntry> spreadCandidates = dirtToGrassMapping.get(sourceBlock.getBlock());
 
     if (spreadCandidates == null || spreadCandidates.isEmpty()) {
       return;
@@ -227,7 +245,14 @@ public class BonemealGrassModule {
     }
 
     if (resultingBlock != null) {
-      world.setBlock(dirtBlockPos, resultingBlock.defaultBlockState(), 3);
+      BlockState resultingBlockState;
+      try {
+        resultingBlockState = resultingBlock.withPropertiesOf(sourceBlock);
+      } catch (Exception e) {
+        resultingBlockState = resultingBlock.defaultBlockState();
+      }
+
+      world.setBlock(dirtBlockPos, resultingBlockState, 3);
       event.setResult(Event.Result.ALLOW);
     }
   }
