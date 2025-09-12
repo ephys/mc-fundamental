@@ -5,17 +5,22 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CraftingTableBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.RegistryObject;
 
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(
+  modid = be.ephys.fundamental.Mod.MODID,
+  bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+)
 public class CraftingTableModule {
 
   @Config(name = "crafting_tables", description = "Add a crafting table for each vanilla wood variant")
@@ -24,20 +29,20 @@ public class CraftingTableModule {
 
   public static final TagKey<Block> CRAFTING_TABLE_TAG = BlockTags.create(new ResourceLocation("forge", "crafting_tables"));
 
-  private static final Item.Properties CraftingTableItemProperties = new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS);
+  private static final Item.Properties CraftingTableItemProperties = new Item.Properties();
 
-  private static BlockBehaviour.Properties createWood(MaterialColor color) {
-    return BlockBehaviour.Properties.of(Material.WOOD, color).strength(2.5F).sound(SoundType.WOOD);
+  private static BlockBehaviour.Properties createWood(MapColor color) {
+    return BlockBehaviour.Properties.of().mapColor(color).strength(2.5F).sound(SoundType.WOOD);
   }
 
-  private static BlockBehaviour.Properties createNetherWood(MaterialColor color) {
-    return BlockBehaviour.Properties.of(Material.NETHER_WOOD, color).strength(2.5F).sound(SoundType.WOOD);
+  private static BlockBehaviour.Properties createNetherWood(MapColor color) {
+    return BlockBehaviour.Properties.of().mapColor(color).strength(2.5F).sound(SoundType.WOOD);
   }
 
   // WARPED
 
   public static final RegistryObject<Block> WARPED_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("warped_crafting_table", () ->
-    new CraftingTableBlock(createNetherWood(MaterialColor.WARPED_STEM))
+    new CraftingTableBlock(createNetherWood(MapColor.WARPED_STEM))
   );
 
   public static final RegistryObject<Item> WARPED_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("warped_crafting_table", () ->
@@ -47,7 +52,7 @@ public class CraftingTableModule {
   // CRIMSON
 
   public static final RegistryObject<Block> CRIMSON_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("crimson_crafting_table", () ->
-    new CraftingTableBlock(createNetherWood(MaterialColor.CRIMSON_STEM))
+    new CraftingTableBlock(createNetherWood(MapColor.CRIMSON_STEM))
   );
 
   public static final RegistryObject<Item> CRIMSON_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("crimson_crafting_table", () ->
@@ -57,7 +62,7 @@ public class CraftingTableModule {
   // ACACIA
 
   public static final RegistryObject<Block> ACACIA_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("acacia_crafting_table", () ->
-    new CraftingTableBlock(createWood(MaterialColor.COLOR_ORANGE))
+    new CraftingTableBlock(createWood(MapColor.COLOR_ORANGE))
   );
 
   public static final RegistryObject<Item> ACACIA_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("acacia_crafting_table", () ->
@@ -67,7 +72,7 @@ public class CraftingTableModule {
   // BIRCH
 
   public static final RegistryObject<Block> BIRCH_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("birch_crafting_table", () ->
-    new CraftingTableBlock(createWood(MaterialColor.SAND))
+    new CraftingTableBlock(createWood(MapColor.SAND))
   );
 
   public static final RegistryObject<Item> BIRCH_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("birch_crafting_table", () ->
@@ -77,7 +82,7 @@ public class CraftingTableModule {
   // DARK OAK
 
   public static final RegistryObject<Block> DARK_OAK_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("dark_oak_crafting_table", () ->
-    new CraftingTableBlock(createWood(MaterialColor.COLOR_BROWN))
+    new CraftingTableBlock(createWood(MapColor.COLOR_BROWN))
   );
 
   public static final RegistryObject<Item> DARK_OAK_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("dark_oak_crafting_table", () ->
@@ -87,7 +92,7 @@ public class CraftingTableModule {
   // JUNGLE
 
   public static final RegistryObject<Block> JUNGLE_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("jungle_crafting_table", () ->
-    new CraftingTableBlock(createWood(MaterialColor.DIRT))
+    new CraftingTableBlock(createWood(MapColor.DIRT))
   );
 
   public static final RegistryObject<Item> JUNGLE_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("jungle_crafting_table", () ->
@@ -97,10 +102,23 @@ public class CraftingTableModule {
   // SPRUCE
 
   public static final RegistryObject<Block> SPRUCE_CRAFTING_TABLE_BLOCK = Mod.BLOCKS.register("spruce_crafting_table", () ->
-    new CraftingTableBlock(createWood(MaterialColor.PODZOL))
+    new CraftingTableBlock(createWood(MapColor.PODZOL))
   );
 
   public static final RegistryObject<Item> SPRUCE_CRAFTING_TABLE_ITEM = Mod.ITEMS.register("spruce_crafting_table", () ->
     new BlockItem(SPRUCE_CRAFTING_TABLE_BLOCK.get(), CraftingTableItemProperties)
   );
+
+  @SubscribeEvent
+  public static void onBuildContents(BuildCreativeModeTabContentsEvent event) {
+    if (event.getTabKey().equals(CreativeModeTabs.FUNCTIONAL_BLOCKS)) {
+      event.accept(WARPED_CRAFTING_TABLE_ITEM.get());
+      event.accept(CRIMSON_CRAFTING_TABLE_ITEM.get());
+      event.accept(ACACIA_CRAFTING_TABLE_ITEM.get());
+      event.accept(BIRCH_CRAFTING_TABLE_ITEM.get());
+      event.accept(DARK_OAK_CRAFTING_TABLE_ITEM.get());
+      event.accept(JUNGLE_CRAFTING_TABLE_ITEM.get());
+      event.accept(SPRUCE_CRAFTING_TABLE_ITEM.get());
+    }
+  }
 }

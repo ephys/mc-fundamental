@@ -6,11 +6,9 @@
   "package": "be.ephys.fundamental.mixins",
   "mixins": [
     "AbstractTreeGrowerMixin",
-    "BannerDuplicateRecipeMixin",
     "CactusBlockMixin",
     "CompassItemMixin",
     "CraftingMenuMixin",
-    "LoomMenuMixin",
     "ServerPlayerMixin",
     "SugarCaneBlockMixin",
     "VineBlockMixin"
@@ -18,6 +16,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "be.ephys.fundamental.FundamentalMixinsPlugin",
-  "client": ["LoomScreenMixin"]
+  "plugin": "be.ephys.fundamental.FundamentalMixinsPlugin"
 }

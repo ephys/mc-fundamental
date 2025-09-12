@@ -4,11 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class LodestoneCompassUtils {
@@ -75,30 +76,29 @@ public class LodestoneCompassUtils {
     }
 
     SignBlockEntity signTe = (SignBlockEntity) te;
+    SignText signText = signTe.getFrontText();
 
-    TextComponent allText = null;
-    for (int line = 0; line < 4; line++) {
-      Component lineText = signTe.getMessage(line, /* filtered version */ true);
-      TextComponent textComponent = lineText instanceof TextComponent
-        ? (TextComponent) lineText
-        : new TextComponent(lineText.getString());
-
-      if (textComponent.getString().equals("")) {
+    boolean hasText = false;
+    MutableComponent component = Component.empty();
+    for (int line = 0; line < SignText.LINES; line++) {
+      Component lineMsg = signText.getMessage(line, /* filtered version */ false);
+      if (lineMsg.getString().isEmpty()) {
         continue;
       }
 
-      if (allText == null) {
-        allText = (TextComponent) textComponent.copy();
+      if (hasText) {
+        component.append(" ");
       } else {
-        allText.append(" ");
-        allText.append(lineText.copy());
+        hasText = true;
       }
+
+      component.append(lineMsg);
     }
 
-    if (allText == null || allText.getString().equals("")) {
+    if (!hasText) {
       return null;
     }
 
-    return allText;
+    return component;
   }
 }

@@ -4,6 +4,7 @@ import be.ephys.fundamental.plant_height.PlantHeightModule;
 import be.ephys.fundamental.utils.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +19,7 @@ import java.util.Random;
 public class VineBlockMixin {
 
   @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
-  private void randomTick$handleVineAge(BlockState state, ServerLevel level, BlockPos pos, Random random, CallbackInfo callbackInfo) {
+  private void randomTick$handleVineAge(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo callbackInfo) {
     if (!PlantHeightModule.vineEnabled.get()) {
       return;
     }

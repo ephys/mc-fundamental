@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -14,7 +16,6 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.Optional;
 /**
  * @author WireSegal
  * Created at 2:08 PM on 8/24/19.
- *
+ * <p>
  * Source: https://github.com/Vazkii/Quark/blob/e9230d30d69eb1323563270e697fde9abf44b747/src/main/java/vazkii/quark/base/recipe/ExclusionRecipe.java
  */
 public class ExclusionRecipe implements CraftingRecipe {
@@ -62,10 +63,9 @@ public class ExclusionRecipe implements CraftingRecipe {
     return false;
   }
 
-  @Nonnull
   @Override
-  public ItemStack assemble(@Nonnull CraftingContainer inv) {
-    return parent.assemble(inv);
+  public ItemStack assemble(CraftingContainer container, RegistryAccess registryAccess) {
+    return parent.assemble(container, registryAccess);
   }
 
   @Override
@@ -73,10 +73,9 @@ public class ExclusionRecipe implements CraftingRecipe {
     return parent.canCraftInDimensions(width, height);
   }
 
-  @Nonnull
   @Override
-  public ItemStack getResultItem() {
-    return parent.getResultItem();
+  public ItemStack getResultItem(RegistryAccess registryAccess) {
+    return parent.getResultItem(registryAccess);
   }
 
   @Nonnull
@@ -95,6 +94,11 @@ public class ExclusionRecipe implements CraftingRecipe {
   @Override
   public RecipeType<?> getType() {
     return parent.getType();
+  }
+
+  @Override
+  public CraftingBookCategory category() {
+    return parent.category();
   }
 
   @Nonnull
@@ -146,11 +150,7 @@ public class ExclusionRecipe implements CraftingRecipe {
     }
   }
 
-  public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ExclusionRecipe> {
-    public Serializer() {
-      setRegistryName("fundamental:exclusion");
-    }
-
+  public static class Serializer implements RecipeSerializer<ExclusionRecipe> {
     @Nonnull
     @Override
     public ExclusionRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
@@ -210,7 +210,7 @@ public class ExclusionRecipe implements CraftingRecipe {
       buffer.writeVarInt(recipe.excluded.size());
       for (ResourceLocation loc : recipe.excluded)
         buffer.writeUtf(loc.toString(), 32767);
-      buffer.writeUtf(Objects.toString(recipe.parent.getSerializer().getRegistryName()), 32767);
+      buffer.writeUtf(Objects.toString(BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.parent.getSerializer())), 32767);
       ((RecipeSerializer<Recipe<?>>) recipe.parent.getSerializer()).toNetwork(buffer, recipe.parent);
     }
   }

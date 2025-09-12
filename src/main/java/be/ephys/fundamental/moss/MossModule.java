@@ -1,21 +1,14 @@
 package be.ephys.fundamental.moss;
 
 import be.ephys.cookiecore.config.Config;
-import be.ephys.fundamental.ExtraModResourcePack;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackRepository;
-import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -29,13 +22,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(
@@ -44,6 +33,8 @@ import java.util.stream.Collectors;
   value = Dist.CLIENT
 )
 public class MossModule {
+
+  private static final FeatureFlagSet EMPTY_FEATURE_FLAG_SET = FeatureFlagSet.of();
 
   @Config(
     name = "inventory_items_respect_biome_colors",
@@ -77,117 +68,7 @@ public class MossModule {
   public static final String MOSSY_STONE_BRICK_PACK_ID = "fundamental:mossy_stone_bricks";
 
   @SubscribeEvent
-  public static void init(FMLConstructModEvent event) {
-    PackRepository resourcePackList = Minecraft.getInstance().getResourcePackRepository();
-    resourcePackList.addPackFinder(MossModule::addPack);
-  }
-
-  private static void addPack(Consumer<Pack> resourcePackInfoConsumer, Pack.PackConstructor factory) {
-    Supplier<PackResources> mossyCobblestonePackSupplier = ExtraModResourcePack.createSupplier(
-      be.ephys.fundamental.Mod.MODID,
-      "fundamental_mossy_cobblestone"
-    );
-
-    resourcePackInfoConsumer.accept(factory.create(
-      MOSSY_COBBLESTONE_PACK_ID,
-      new TranslatableComponent("fundamental.pack.mossy_cobblestone.title"),
-      /* always enabled */ false,
-      mossyCobblestonePackSupplier,
-      new PackMetadataSection(
-        new TranslatableComponent("fundamental.pack.controlled"),
-        6),
-      Pack.Position.TOP,
-      PackSource.BUILT_IN,
-      false
-    ));
-
-    Supplier<PackResources> mossyStoneBricksPackSupplier = ExtraModResourcePack.createSupplier(
-      be.ephys.fundamental.Mod.MODID,
-      "fundamental_mossy_stone_bricks"
-    );
-
-    resourcePackInfoConsumer.accept(factory.create(
-      MOSSY_STONE_BRICK_PACK_ID,
-      new TranslatableComponent("fundamental.pack.mossy_stone_bricks.title"),
-      /* always enabled */ false,
-      mossyStoneBricksPackSupplier,
-      new PackMetadataSection(
-        new TranslatableComponent("fundamental.pack.controlled"),
-        6),
-      Pack.Position.TOP,
-      PackSource.BUILT_IN,
-      false
-    ));
-  }
-
-  @SubscribeEvent
   public static void setupClient(final FMLClientSetupEvent event) {
-    Minecraft minecraft = Minecraft.getInstance();
-    PackRepository resourcePackList = minecraft.getResourcePackRepository();
-
-    List<String> enabledPacks = resourcePackList.getSelectedPacks()
-      .stream().map(Pack::getId)
-      .collect(Collectors.toList());
-
-    List<String> addedPackIds = new ArrayList<>();
-    List<String> removedPackIds = new ArrayList<>();
-
-    boolean mossyCobblePackEnabled = enabledPacks.contains(MOSSY_COBBLESTONE_PACK_ID);
-    if (mossyCobblestoneEnabled.get()) {
-      if (!mossyCobblePackEnabled) {
-        addedPackIds.add(MOSSY_COBBLESTONE_PACK_ID);
-      }
-    } else {
-      if (mossyCobblePackEnabled) {
-        removedPackIds.add(MOSSY_COBBLESTONE_PACK_ID);
-      }
-    }
-
-    boolean mossyStoneBricksPackEnabled = enabledPacks.contains(MOSSY_STONE_BRICK_PACK_ID);
-    if (mossyStoneBrickEnabled.get()) {
-      if (!mossyStoneBricksPackEnabled) {
-        addedPackIds.add(MOSSY_STONE_BRICK_PACK_ID);
-      }
-    } else {
-      if (mossyStoneBricksPackEnabled) {
-        removedPackIds.add(MOSSY_STONE_BRICK_PACK_ID);
-      }
-    }
-
-    boolean changed = mossyCobblestoneEnabled.get() != mossyCobblePackEnabled
-      || mossyStoneBrickEnabled.get() != mossyStoneBricksPackEnabled;
-
-    if (changed) {
-      int modResourcesIndex = enabledPacks.indexOf("mod_resources");
-      if (modResourcesIndex == -1) {
-        throw new RuntimeException("mod_resources pack is not loaded?");
-      }
-
-      enabledPacks.addAll(modResourcesIndex + 1, addedPackIds);
-      enabledPacks.removeAll(removedPackIds);
-
-      resourcePackList.setSelected(enabledPacks);
-      minecraft.reloadResourcePacks();
-
-      RunOnceAfterForgeHack.run(() -> {
-        Options gameSettings = minecraft.options;
-        gameSettings.resourcePacks.clear();
-        gameSettings.incompatibleResourcePacks.clear();
-        for (Pack resourcepackinfo : resourcePackList.getSelectedPacks()) {
-          if (!resourcepackinfo.isFixedPosition()) {
-            gameSettings.resourcePacks.add(resourcepackinfo.getId());
-            if (!resourcepackinfo.getCompatibility().isCompatible()) {
-              gameSettings.incompatibleResourcePacks.add(resourcepackinfo.getId());
-            }
-          }
-        }
-
-        gameSettings.save();
-      });
-    }
-
-    // TODO (config?): Make moss color more like the vanilla block based on Y level (the deeper you go the more like vanilla it is).
-
     Block[] mossyStoneBricks = new Block[]{
       Blocks.MOSSY_STONE_BRICKS,
       Blocks.INFESTED_MOSSY_STONE_BRICKS,

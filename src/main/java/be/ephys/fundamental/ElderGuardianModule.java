@@ -39,11 +39,12 @@ public class ElderGuardianModule {
       return;
     }
 
-    if (!ForgeEventFactory.canLivingConvert(mob, EntityType.ZOMBIFIED_PIGLIN, (timer) -> {})) {
+    if (!ForgeEventFactory.canLivingConvert(mob, EntityType.ZOMBIFIED_PIGLIN, (timer) -> {
+    })) {
       return;
     }
 
-    ElderGuardian elderGuardian = EntityType.ELDER_GUARDIAN.create(entity.getLevel());
+    ElderGuardian elderGuardian = EntityType.ELDER_GUARDIAN.create(entity.level());
     elderGuardian.moveTo(entity.getX(), entity.getY(), entity.getZ());
     elderGuardian.setNoAi(mob.isNoAi());
 
@@ -55,8 +56,10 @@ public class ElderGuardianModule {
       elderGuardian.setCustomNameVisible(mob.isCustomNameVisible());
     }
 
-    mob.getLevel().addFreshEntity(elderGuardian);
-    elderGuardian.persistenceRequired = mob.isPersistenceRequired();
+    mob.level().addFreshEntity(elderGuardian);
+    if (mob.isPersistenceRequired()) {
+      elderGuardian.setPersistenceRequired();
+    }
 
     ForgeEventFactory.onLivingConvert(mob, elderGuardian);
 

@@ -3,6 +3,7 @@ package be.ephys.fundamental.plant_height;
 import be.ephys.cookiecore.config.Config;
 import be.ephys.fundamental.utils.MathUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -91,7 +92,7 @@ public class PlantHeightModule {
   @Config.IntDefault(2)
   public static ForgeConfigSpec.IntValue vineMaxFloorDistance;
 
-  public static boolean growCactusOrSugarCane(BlockState blockState, Level level, BlockPos pos, Random random, boolean usingBonemeal) {
+  public static boolean growCactusOrSugarCane(BlockState blockState, Level level, BlockPos pos, RandomSource random, boolean usingBonemeal) {
     BlockPos up = pos.above();
     if (!level.isEmptyBlock(up)) {
       return false;

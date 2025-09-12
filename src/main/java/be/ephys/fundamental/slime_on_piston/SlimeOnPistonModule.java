@@ -60,9 +60,9 @@ public class SlimeOnPistonModule {
       return;
     }
 
-    Level world = event.getWorld();
+    Level level = event.getLevel();
     BlockPos pos = event.getPos();
-    BlockState targetedBlockState = world.getBlockState(pos);
+    BlockState targetedBlockState = level.getBlockState(pos);
 
     if (!(targetedBlockState.getBlock() == Blocks.PISTON && !targetedBlockState.getValue(PistonBaseBlock.EXTENDED))
       && !(targetedBlockState.getBlock() == Blocks.PISTON_HEAD && targetedBlockState.getValue(PistonHeadBlock.TYPE) == PistonType.DEFAULT)) {
@@ -74,34 +74,34 @@ public class SlimeOnPistonModule {
       return;
     }
 
-    if (!world.isClientSide()) {
+    if (!level.isClientSide()) {
       // turn into sticky piston
       if (targetedBlockState.getBlock() == Blocks.PISTON) {
         BlockState newBlockState = Blocks.STICKY_PISTON.withPropertiesOf(targetedBlockState);
 
-        world.setBlockAndUpdate(pos, newBlockState);
+        level.setBlockAndUpdate(pos, newBlockState);
       } else {
         BlockState newBlockState = targetedBlockState.setValue(PistonHeadBlock.TYPE, PistonType.STICKY);
 
         BlockPos pistonBasePos = pos.relative(blockFace.getOpposite());
-        BlockState pistonBaseBlockState = world.getBlockState(pistonBasePos);
+        BlockState pistonBaseBlockState = level.getBlockState(pistonBasePos);
 
         BlockState newBaseBlockState = Blocks.STICKY_PISTON.withPropertiesOf(pistonBaseBlockState);
 
-        world.setBlockAndUpdate(pos, newBlockState);
-        world.setBlockAndUpdate(pistonBasePos, newBaseBlockState);
+        level.setBlockAndUpdate(pos, newBlockState);
+        level.setBlockAndUpdate(pistonBasePos, newBaseBlockState);
       }
 
-      Player player = event.getPlayer();
+      Player player = event.getEntity();
       if (!player.getAbilities().instabuild) {
         usedItemStack.shrink(1);
       }
     }
 
-    world.playSound(event.getPlayer(), pos.getX(), pos.getY(), pos.getZ(), SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
+    level.playSound(event.getEntity(), pos.getX(), pos.getY(), pos.getZ(), SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
 
     event.setCanceled(true);
-    event.setCancellationResult(world.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
+    event.setCancellationResult(level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
   }
 
   public static void axeThatPiston(PlayerInteractEvent.RightClickBlock event) {
@@ -110,9 +110,9 @@ public class SlimeOnPistonModule {
       return;
     }
 
-    Level world = event.getWorld();
+    Level level = event.getLevel();
     BlockPos pos = event.getPos();
-    BlockState targetedBlockState = world.getBlockState(pos);
+    BlockState targetedBlockState = level.getBlockState(pos);
 
     if (!(targetedBlockState.getBlock() == Blocks.STICKY_PISTON && !targetedBlockState.getValue(PistonBaseBlock.EXTENDED))
       && !(targetedBlockState.getBlock() == Blocks.PISTON_HEAD && targetedBlockState.getValue(PistonHeadBlock.TYPE) == PistonType.STICKY)) {
@@ -124,24 +124,24 @@ public class SlimeOnPistonModule {
       return;
     }
 
-    Player player = event.getPlayer();
+    Player player = event.getEntity();
 
-    if (!world.isClientSide()) {
+    if (!level.isClientSide()) {
       // turn into sticky piston
       if (targetedBlockState.getBlock() == Blocks.STICKY_PISTON) {
         BlockState newBlockState = Blocks.PISTON.withPropertiesOf(targetedBlockState);
 
-        world.setBlockAndUpdate(pos, newBlockState);
+        level.setBlockAndUpdate(pos, newBlockState);
       } else {
         BlockState newBlockState = targetedBlockState.setValue(PistonHeadBlock.TYPE, PistonType.DEFAULT);
 
         BlockPos pistonBasePos = pos.relative(blockFace.getOpposite());
-        BlockState pistonBaseBlockState = world.getBlockState(pistonBasePos);
+        BlockState pistonBaseBlockState = level.getBlockState(pistonBasePos);
 
         BlockState newBaseBlockState = Blocks.PISTON.withPropertiesOf(pistonBaseBlockState);
 
-        world.setBlockAndUpdate(pos, newBlockState);
-        world.setBlockAndUpdate(pistonBasePos, newBaseBlockState);
+        level.setBlockAndUpdate(pos, newBlockState);
+        level.setBlockAndUpdate(pistonBasePos, newBaseBlockState);
       }
 
       if (!player.getAbilities().instabuild) {
@@ -151,9 +151,9 @@ public class SlimeOnPistonModule {
       }
     }
 
-    world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.SLIME_BLOCK_BREAK, SoundSource.BLOCKS, 1f, 1f);
+    level.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.SLIME_BLOCK_BREAK, SoundSource.BLOCKS, 1f, 1f);
 
     event.setCanceled(true);
-    event.setCancellationResult(world.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
+    event.setCancellationResult(level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
   }
 }

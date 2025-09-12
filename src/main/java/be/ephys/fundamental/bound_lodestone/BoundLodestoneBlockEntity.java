@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,6 +76,6 @@ public class BoundLodestoneBlockEntity extends BlockEntity {
   }
 
   private static boolean targetLodestoneExists(ServerLevel world, BlockPos pos) {
-    return world.getPoiManager().existsAtPosition(PoiType.LODESTONE, pos);
+    return world.getPoiManager().existsAtPosition(PoiTypes.LODESTONE, pos);
   }
 }

@@ -25,7 +25,7 @@ public class ConfigRecipeCondition implements ICondition {
   }
 
   @Override
-  public boolean test() {
+  public boolean test(IContext context) {
     if (configKey.contains("%")) {
       throw new RuntimeException("Illegal config key: " + configKey);
     }

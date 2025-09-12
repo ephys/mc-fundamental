@@ -222,13 +222,13 @@ public class BonemealGrassModule {
       return;
     }
 
-    Level world = event.getWorld();
+    Level level = event.getLevel();
     BlockPos dirtBlockPos = event.getPos();
     Block resultingBlock = null;
 
     stop:
     for (BlockPos blockpos : BlockPos.betweenClosed(dirtBlockPos.offset(-1, -1, -1), dirtBlockPos.offset(1, 1, 1))) {
-      BlockState neighborBlock = world.getBlockState(blockpos);
+      BlockState neighborBlock = level.getBlockState(blockpos);
 
       // TODO: should we do a random selection instead of first come?
       for (SpreadableMappingEntry spreadCandidate : spreadCandidates) {
@@ -252,7 +252,7 @@ public class BonemealGrassModule {
         resultingBlockState = resultingBlock.defaultBlockState();
       }
 
-      world.setBlock(dirtBlockPos, resultingBlockState, 3);
+      level.setBlock(dirtBlockPos, resultingBlockState, 3);
       event.setResult(Event.Result.ALLOW);
     }
   }

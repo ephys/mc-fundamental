@@ -45,7 +45,7 @@ public class BonemealLilyPadModule {
     }
 
     BlockPos lilyPos = event.getPos();
-    Level level = event.getWorld();
+    Level level = event.getLevel();
 
     BlockPos spawnPos = findSuitableSpawnPos(lilyPos, level);
     if (spawnPos == null) {

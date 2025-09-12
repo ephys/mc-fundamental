@@ -13,6 +13,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -44,7 +46,7 @@ public class NamedLodeStoneModule {
 
   /**
    * Part of the Sign-on-a-lodestone renames your compass.
-   *
+   * <p>
    * Makes signs on Lodestones & Bound Lodestones pass-through for right-clicks with a compass.
    */
   public static void onRightClickSignWithCompass(PlayerInteractEvent.RightClickBlock event) {
@@ -54,11 +56,20 @@ public class NamedLodeStoneModule {
       return;
     }
 
-    Level world = event.getWorld();
+    Level level = event.getLevel();
     BlockPos signPos = event.getPos();
-    BlockState clickedSign = world.getBlockState(signPos);
+    BlockState clickedSign = level.getBlockState(signPos);
 
     if (!(clickedSign.getBlock() instanceof WallSignBlock)) {
+      return;
+    }
+
+    BlockEntity blockEntity = level.getBlockEntity(signPos);
+    if (!(blockEntity instanceof SignBlockEntity signBlockEntity)) {
+      return;
+    }
+
+    if (!signBlockEntity.isWaxed()) {
       return;
     }
 
@@ -68,33 +79,33 @@ public class NamedLodeStoneModule {
 
     Direction signDirection = clickedSign.getValue(WallSignBlock.FACING);
     BlockPos lodestonePos = signPos.relative(signDirection.getOpposite());
-    BlockState attachedLodestone = world.getBlockState(lodestonePos);
+    BlockState attachedLodestone = level.getBlockState(lodestonePos);
 
     if (!attachedLodestone.is(Blocks.LODESTONE)
       && !attachedLodestone.is(BoundLodestoneModule.BOUND_LODESTONE.get())) {
       return;
     }
 
-    rightClick(world, lodestonePos, event.getPlayer(), itemStack, event.getHand(), signDirection);
+    rightClick(level, lodestonePos, event.getEntity(), itemStack, event.getHand(), signDirection);
     event.setCancellationResult(InteractionResult.SUCCESS);
   }
 
-  private static void rightClick(Level world, BlockPos pos, Player player, ItemStack itemStack, InteractionHand hand, Direction facingOpposite) {
+  private static void rightClick(Level level, BlockPos pos, Player player, ItemStack itemStack, InteractionHand hand, Direction facingOpposite) {
     if (hand != InteractionHand.MAIN_HAND) {
       return;
     }
 
-    BlockState attachedState = world.getBlockState(pos);
+    BlockState attachedState = level.getBlockState(pos);
 
-    BlockState stateDown = world.getBlockState(pos.below());
+    BlockState stateDown = level.getBlockState(pos.below());
     BlockHitResult rayTrace = new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), facingOpposite, pos, false);
     InteractionResult result = itemStack.getItem().useOn(new UseOnContext(player, hand, rayTrace));
 
     if (result == InteractionResult.PASS) {
-      if (!world.isEmptyBlock(pos.below()) && attachedState.isAir()) {
-        stateDown.use(world, player, hand, rayTrace);
+      if (!level.isEmptyBlock(pos.below()) && attachedState.isAir()) {
+        stateDown.use(level, player, hand, rayTrace);
       } else if (!attachedState.isAir()) {
-        attachedState.use(world, player, hand, rayTrace);
+        attachedState.use(level, player, hand, rayTrace);
       }
     }
   }

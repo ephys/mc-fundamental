@@ -2,7 +2,7 @@ package be.ephys.fundamental;
 
 import be.ephys.cookiecore.config.ConfigSynchronizer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,10 +27,10 @@ public class Mod {
 
   public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
   public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
-  public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MODID);
-  public static final DeferredRegister<Motive> PAINTINGS = DeferredRegister.create(ForgeRegistries.PAINTING_TYPES, MODID);
+  public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
+  public static final DeferredRegister<PaintingVariant> PAINTINGS = DeferredRegister.create(ForgeRegistries.PAINTING_VARIANTS, MODID);
 
-  public static final RegistryObject<Motive> FOX_PAINTING = PAINTINGS.register("fox", () -> new Motive(16, 32));
+  public static final RegistryObject<PaintingVariant> FOX_PAINTING = PAINTINGS.register("fox", () -> new PaintingVariant(16, 32));
 
   public Mod() {
     Map<ModConfig.Type, Pair<ConfigSynchronizer.BuiltConfig, ForgeConfigSpec>> configs = ConfigSynchronizer.synchronizeConfig();
@@ -40,10 +40,10 @@ public class Mod {
 
     Mod.BLOCKS.register(modEventBus);
     Mod.ITEMS.register(modEventBus);
-    Mod.BLOCK_ENTITIES.register(modEventBus);
+    Mod.BLOCK_ENTITY_TYPES.register(modEventBus);
     Mod.PAINTINGS.register(modEventBus);
 
-    ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
+    ForgeRegistries.RECIPE_SERIALIZERS.register("exclusion", ExclusionRecipe.SERIALIZER);
     CraftingHelper.register(new ConfigRecipeCondition.Serializer(commonConfig, Mod.id("boolean_config")));
   }
 

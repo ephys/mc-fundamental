@@ -3,11 +3,11 @@ package be.ephys.fundamental.bound_lodestone;
 import be.ephys.fundamental.Mod;
 import be.ephys.fundamental.named_lodestone.LodestoneCompassUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,7 +19,9 @@ import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -117,24 +119,22 @@ public class BoundLodestoneBlock extends BaseEntityBlock {
 
   private boolean attemptBindLodestone(BoundLodestoneBlockEntity te, ItemStack heldItem, Player player, Level world) {
     CompoundTag itemTag = heldItem.getTag();
-    //                                 .isLodestoneCompass
     if (itemTag == null || !CompassItem.isLodestoneCompass(heldItem)) {
-      player.displayClientMessage(new TranslatableComponent("messages.fundamental.not_a_lodestone_compass"), true);
+      player.displayClientMessage(Component.translatable("messages.fundamental.not_a_lodestone_compass"), true);
 
       return false;
     }
 
     // get Lodestone dimension
-    ResourceKey<Level> lodestoneDim = CompassItem.getLodestoneDimension(itemTag).get();
-    BlockPos targetPos = readCompassLodestonePos(itemTag);
+    GlobalPos lodestonePos = CompassItem.getLodestonePosition(itemTag);
 
-    if (targetPos == null || !world.dimension().equals(lodestoneDim)) {
-      player.displayClientMessage(new TranslatableComponent("messages.fundamental.your_lodestone_is_in_another_castle"), true);
+    if (lodestonePos == null || !world.dimension().equals(lodestonePos.dimension())) {
+      player.displayClientMessage(Component.translatable("messages.fundamental.your_lodestone_is_in_another_castle"), true);
 
       return false;
     }
 
-    te.bindTo(targetPos);
+    te.bindTo(lodestonePos.pos());
 
     return true;
   }
@@ -143,9 +143,6 @@ public class BoundLodestoneBlock extends BaseEntityBlock {
     BlockPos targetPos = te.getTargetLodestonePos();
     BlockPos boundLoPos = te.getBlockPos();
     ResourceKey<Level> dim = world.dimension();
-
-    // TODO: set display name if right clicking a sign
-    // TODO: support right clicking a sign on a bound lodestone
 
     Abilities playerAbilities = player.getAbilities();
 

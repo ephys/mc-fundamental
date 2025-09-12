@@ -3,6 +3,7 @@ package be.ephys.fundamental.mixins;
 import be.ephys.fundamental.BedTooFarFix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.common.ForgeMod;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,11 +26,11 @@ public class ServerPlayerMixin {
 
     ServerPlayer player = (ServerPlayer) (Object) this;
 
-    double d0 = player.getX() - ((double)pos.getX() + 0.5D);
-    double d1 = player.getY() - ((double)pos.getY() + 0.5D) + 1.5D;
-    double d2 = player.getZ() - ((double)pos.getZ() + 0.5D);
+    double d0 = player.getX() - ((double) pos.getX() + 0.5D);
+    double d1 = player.getY() - ((double) pos.getY() + 0.5D) + 1.5D;
+    double d2 = player.getZ() - ((double) pos.getZ() + 0.5D);
     double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-    double dist = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
+    double dist = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() + 1;
     dist *= dist;
 
     cir.setReturnValue(d3 <= dist);

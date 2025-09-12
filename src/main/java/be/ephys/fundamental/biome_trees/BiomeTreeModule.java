@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.block.Block;
@@ -20,16 +21,19 @@ import net.minecraft.world.level.levelgen.feature.configurations.TreeConfigurati
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BiomeTreeModule {
   @Config(name = "saplings_grow_biome_trees", description = "Makes saplings grow into the same trees that generate in the biome during world generation.")
   @Config.BooleanDefault(true)
   public static ForgeConfigSpec.BooleanValue enabled;
 
-  private static final Random RANDOM = new Random();
+  private static final RandomSource RANDOM = RandomSource.create();
 
-  public static boolean spawnBiomeTree(ServerLevel world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState saplingState, Random random, ConfiguredFeature<?, ?> expectedTreeTypeCf) {
+  public static boolean spawnBiomeTree(ServerLevel world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState saplingState, RandomSource random, ConfiguredFeature<?, ?> expectedTreeTypeCf) {
     if (!enabled.get()) {
       return false;
     }
@@ -168,6 +172,10 @@ public class BiomeTreeModule {
     return null;
   }
 
-  private record BiomeTreeFeatures(List<WeightedConfiguredFeature> weightedTreeFeatures, List<ConfiguredFeature<?, ?>> defaultTreeFeatures) {}
-  private record WeightedConfiguredFeature(ConfiguredFeature<?, ?> configuredFeature, float chance) {}
+  private record BiomeTreeFeatures(List<WeightedConfiguredFeature> weightedTreeFeatures,
+                                   List<ConfiguredFeature<?, ?>> defaultTreeFeatures) {
+  }
+
+  private record WeightedConfiguredFeature(ConfiguredFeature<?, ?> configuredFeature, float chance) {
+  }
 }

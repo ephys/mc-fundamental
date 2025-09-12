@@ -2,6 +2,7 @@ package be.ephys.fundamental.bonemeal;
 
 import be.ephys.cookiecore.config.Config;
 import be.ephys.fundamental.plant_height.PlantHeightModule;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -12,14 +13,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-import java.util.Random;
-
 @Mod.EventBusSubscriber(
   modid = be.ephys.fundamental.Mod.MODID,
   bus = Mod.EventBusSubscriber.Bus.MOD
 )
 public class BonemealCaneCactusModule {
-  private static final Random random = new Random();
+  private static final RandomSource RANDOM = RandomSource.create();
 
   @Config(
     name = "bonemeal.cactus",
@@ -49,8 +48,7 @@ public class BonemealCaneCactusModule {
       return;
     }
 
-    System.out.println("grow!");
-    var result = PlantHeightModule.growCactusOrSugarCane(targetBlock, event.getWorld(), event.getPos(), random, true);
+    var result = PlantHeightModule.growCactusOrSugarCane(targetBlock, event.getLevel(), event.getPos(), RANDOM, true);
 
     if (result) {
       event.setResult(Event.Result.ALLOW);
