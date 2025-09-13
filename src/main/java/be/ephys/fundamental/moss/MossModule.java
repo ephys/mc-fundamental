@@ -51,7 +51,7 @@ public class MossModule {
       + "\nDue to a limitation in Forge, the game will reload resource packs the first time this mod is added (and if this config changes), leading to a longer initial loading time. Sorry.",
     side = ModConfig.Type.CLIENT
   )
-  @Config.BooleanDefault(true)
+  @Config.BooleanDefault(false)
   public static ForgeConfigSpec.BooleanValue mossyStoneBrickEnabled;
 
   @Config(
@@ -61,7 +61,7 @@ public class MossModule {
       + "\nDue to a limitation in Forge, the game will reload resource packs the first time this mod is added (and if this config changes), leading to a longer initial loading time. Sorry.",
     side = ModConfig.Type.CLIENT
   )
-  @Config.BooleanDefault(true)
+  @Config.BooleanDefault(false)
   public static ForgeConfigSpec.BooleanValue mossyCobblestoneEnabled;
 
   public static final String MOSSY_COBBLESTONE_PACK_ID = "fundamental:mossy_cobblestone";
