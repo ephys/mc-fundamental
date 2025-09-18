@@ -124,7 +124,7 @@ obfuscation {
 }
 
 dependencies {
-    modImplementation "be.ephys.cookiecore:cookiecore:1.20.1-5.0.0"
+    modImplementation "be.ephys.cookiecore:cookiecore:${cookiecore_version}"
 }
 
 // Uncomment the lines below if you wish to configure mixin. The mixin file should be named modid.mixins.json.
@@ -157,7 +157,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_license            : mod_license,
             mod_version            : mod_version,
             mod_authors            : mod_authors,
-            mod_description        : mod_description
+            mod_description        : mod_description,
+            cookiecore_version     : cookiecore_version
     ]
     inputs.properties replaceProperties
     expand replaceProperties
