@@ -51,14 +51,6 @@ public class BoundLodestoneBlock extends BaseEntityBlock {
     world.setBlockAndUpdate(pos, state.setValue(BOUND, false));
   }
 
-  public static BlockPos readCompassLodestonePos(CompoundTag nbt) {
-    if (!nbt.contains("LodestonePos")) {
-      return null;
-    }
-
-    return NbtUtils.readBlockPos(nbt.getCompound("LodestonePos"));
-  }
-
   public static <T extends BlockEntity> T getBlockEntity(Class<T> teClass, Level world, BlockPos pos) {
     BlockEntity te = world.getBlockEntity(pos);
 

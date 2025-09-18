@@ -15,6 +15,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "plugin": "be.ephys.fundamental.FundamentalMixinsPlugin"
+  }
 }
