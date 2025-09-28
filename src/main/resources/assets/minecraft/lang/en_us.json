@@ -1,3 +1,11 @@
 {
-  "block.minecraft.bed.too_far_away": "This bed is too far away"
+  "block.minecraft.bed.too_far_away": "This bed is too far away",
+  "item.fundamental.potion.persistent_tooltip": "Persists through death",
+  "item.minecraft.lingering_potion.effect.cure": "Lingering Potion of Cleansing",
+  "item.minecraft.splash_potion.effect.cure": "Splash Potion of Cleansing",
+  "item.minecraft.potion.effect.cure": "Potion of Cleansing",
+  "effect.fundamental.cure": "Cleanse",
+  "effect.fundamental.cure.desc": "Removes all negative status effects",
+  "effect.fundamental.cure.description": "Removes all negative status effects",
+  "description.effect.fundamental.cure": "Removes all negative status effects"
 }

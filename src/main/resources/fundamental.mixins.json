@@ -9,6 +9,7 @@
     "CactusBlockMixin",
     "CompassItemMixin",
     "CraftingMenuMixin",
+    "MobEffectInstanceMixin",
     "ServerPlayerMixin",
     "SugarCaneBlockMixin",
     "VineBlockMixin"

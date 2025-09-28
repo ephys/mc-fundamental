@@ -2,8 +2,10 @@ package be.ephys.fundamental;
 
 import be.ephys.cookiecore.config.ConfigSynchronizer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -29,6 +31,8 @@ public class Mod {
   public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
   public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
   public static final DeferredRegister<PaintingVariant> PAINTINGS = DeferredRegister.create(ForgeRegistries.PAINTING_VARIANTS, MODID);
+  public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MODID);
+  public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, MODID);
 
   public static final RegistryObject<PaintingVariant> FOX_PAINTING = PAINTINGS.register("fox", () -> new PaintingVariant(16, 32));
 
@@ -42,6 +46,8 @@ public class Mod {
     Mod.ITEMS.register(modEventBus);
     Mod.BLOCK_ENTITY_TYPES.register(modEventBus);
     Mod.PAINTINGS.register(modEventBus);
+    Mod.MOB_EFFECTS.register(modEventBus);
+    Mod.POTIONS.register(modEventBus);
 
     ForgeRegistries.RECIPE_SERIALIZERS.register("exclusion", ExclusionRecipe.SERIALIZER);
     CraftingHelper.register(new ConfigRecipeCondition.Serializer(commonConfig, Mod.id("boolean_config")));
