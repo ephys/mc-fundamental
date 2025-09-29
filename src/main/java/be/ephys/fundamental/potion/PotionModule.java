@@ -8,6 +8,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
 import net.minecraft.world.effect.MobEffect;
@@ -52,6 +53,10 @@ public class PotionModule {
   @Config.StringListDefault({})
   public static ForgeConfigSpec.ConfigValue<List<String>> persistentPotionList;
 
+  @Config(name = "potion_durations", description = "Use this to change the duration of potion effects. The format is '<potion_registry_name>|<duration_in_seconds>'. For example, to make potions of swiftness last 5 minutes instead of 3, add 'minecraft:swiftness|300' to the list.\nFor potions with multiple effects, you can specify the duration for each effect by appending the effect registry name, e.g. 'minecraft:turtle_master|minecraft:resistance|45' to set the duration of the resistance effect of the turtle master potion to 45 seconds. (requires restart)")
+  @Config.StringListDefault({})
+  public static ForgeConfigSpec.ConfigValue<List<String>> potionDurations;
+
   public static final String TAG_EFFECTS_ON_DEATH = "fundamental:effects_on_death";
 
   public static final RegistryObject<MobEffect> CURE_EFFECT = Mod.MOB_EFFECTS.register("cure", () -> {
@@ -69,8 +74,61 @@ public class PotionModule {
 
     registerPotionRecipe();
     registerPersistentPotions();
+    registerPotionDurations();
 
     Items.POTION.maxStackSize = potionStackSize.get();
+  }
+
+  private static void registerPotionDurations() {
+    for (String potionDuration : potionDurations.get()) {
+      String[] parts = potionDuration.split("\\|");
+      if (parts.length < 2 || parts.length > 3) {
+        Mod.LOGGER.warn("Invalid potion duration entry: '{}'. Expected format '<potion_registry_name>|<duration_in_seconds>' or '<potion_registry_name>|<effect_registry_name>|<duration_in_seconds>'", potionDuration);
+        continue;
+      }
+
+      String potionName = parts[0];
+      Potion potion = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionName));
+      if (potion == null) {
+        Mod.LOGGER.warn("Could not find potion with registry name '{}'", potionName);
+        continue;
+      }
+
+      String durationString = parts[parts.length - 1];
+      int durationInSeconds;
+      try {
+        durationInSeconds = Integer.parseInt(durationString);
+        if (durationInSeconds < 0) {
+          Mod.LOGGER.warn("Invalid duration '{}' for potion '{}'. Duration must be a non-negative integer.", durationString, potionName);
+          continue;
+        }
+      } catch (NumberFormatException e) {
+        Mod.LOGGER.warn("Invalid duration '{}' for potion '{}'. Duration must be a non-negative integer.", durationString, potionName);
+        continue;
+      }
+
+      int durationInTicks = durationInSeconds * 20;
+
+      String effectName = parts.length == 3 ? parts[1] : null;
+      MobEffect effectFilter = effectName != null ? ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(effectName)) : null;
+      if (effectName != null && effectFilter == null) {
+        Mod.LOGGER.warn("Could not find effect with registry name '{}' for potion '{}'", effectName, potionName);
+        continue;
+      }
+
+      boolean foundEffect = false;
+      for (MobEffectInstance effectInstance : potion.getEffects()) {
+        MobEffect effect = effectInstance.getEffect();
+        if (effectFilter == null || effect == effectFilter) {
+          effectInstance.duration = durationInTicks;
+          foundEffect = true;
+        }
+      }
+
+      if (!foundEffect) {
+        Mod.LOGGER.warn("Could not find effect '{}' in potion '{}'", effectName, potionName);
+      }
+    }
   }
 
   private static void registerPersistentPotions() {
